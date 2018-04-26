@@ -20,7 +20,7 @@ The following packages are required for converting the scanned pdf files to imag
 - Save the output csv file
 
 ### Parse the csv file
- - //TODO
+- CSV file path is required as a command line argument
 
 ## Process
 The while process consists from 5 basic steps:
