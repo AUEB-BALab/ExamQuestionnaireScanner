@@ -5,10 +5,14 @@ The following packages are required for converting the scanned pdf files to imag
 - [FormScanner](http://www.formscanner.org/) is a free and open source OMR (optical mark recognition) software for scanning and grading user-filled, multiple choice forms.
 - [ImageMagick](https://www.imagemagick.org/script/index.php) is a free open source application that can create, edit, compose, or convert bitmap images.
 - [Python 3](https://www.python.org/) (or later)
+- Python modules via ```pip install -r requirements.txt```
 
 ## How to
 ### Scan the exam papers
-- //TODO
+The first and only manual step of the grading process is the scanning of the exam papers. The goal is to feed the FormScanner with an image file of each exam sheet. 
+Unfortunately, our equipment does not offer the functionality of saving scanned documents to image format and thus, we are forced to create a **pdf** file for each scanned set of exam sheets. 
+To automatically scan a bundle of exam, place the exam sheets on the top tray of the scanner, as it is illustrated in the following picture. 
+![Scanning_setup](media/scanning_setup.jpg)
 
 ### Convert the scanned PDF to seperate image files
 - //TODO
