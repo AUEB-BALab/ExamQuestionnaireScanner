@@ -2,12 +2,15 @@ import sys
 import csv
 import logging
 import argparse
+import pandas as pd
 
 parser = argparse.ArgumentParser()
-parser.add_argument("input_csv", 
+parser.add_argument("input_csv",
     help="The CSV file that contains the results produced by FormScanner")
 parser.add_argument("-o", "--output_file",
     help="The path for the output file. The default will be used if not set by the user.")
+parser.add_argument("-e", "--exams_sheet",
+    help="The path for the exam's excel document. The default will be used if not set by the user.")
 args = parser.parse_args()
 
 
@@ -39,6 +42,23 @@ def checkParityBit(bitString, paperID):
             return False
 
     return True
+
+
+def  getStudentByID(stduentID):
+
+    # From Professors grade sheet get all the students
+    xls_file = pd.ExcelFile(args.exams_sheet, column="", index="")
+    df = xls_file.parse('students')
+    dfSelect = pd.DataFrame(df, columns=['Α/Α', 'Αρ. Μητρώου', 'Φοιτητής', 'Πατρώνυμο Πρόγρ. Τμήματος'])
+
+    # This command will match the specific student
+    getStudent = dfSelect[dfSelect['Φοιτητής'].str.contains(stduentID)]
+
+    # Upon matching return that studnet
+    if (dfSelect[dfSelect['Φοιτητής'].str.contains(stduentID)].empty):
+        return ""
+    else:
+        return (getStudent['Φοιτητής'])
 
 # read the input csvfile_path
 csvfile_path = args.input_csv
@@ -73,12 +93,32 @@ for x in range(numberOfRows):
 newSortedArray = [[0 for x in range(12)] for y in range(numberOfRows)]
 paperFormScannerID = ''
 notToInclude = []
+
+# File for logging purposes
+
+
 for x in range(numberOfRows):
+
+    # Get the paper ID given from the FormScanner to use it for logging purposes
+    paperFormScannerID = Matrix[x][0]
+
+    # Here we retrieve the students ID from characters and we interpret it in decimals
     mergeIDElements = ''
     for y in range(12,19):
-
         if Matrix[x][y] != '':
                 mergeIDElements += str(ord(Matrix[x][y]) - 65)
+
+    # Now we are going to pipe the retrieved student ID to get its name
+    studentName = getStudentByID(mergeIDElements)
+
+    # If the student is not found through an error and log it
+    if studentName == "":
+        logging.error("Student with ID ", mergeIDElements, " not found")
+        f = open("error_logs", "a+")
+        #f.write("In exam %s student with ID %s not found \n" % str(paperFormScannerID), str(mergeIDElements))
+        f.write("In exam %s student with ID was not found \n" % str(paperFormScannerID),)
+        f.close()
+
 
     # Upon exiting store results in newSortedArray as the first element of all Records
     for j in range(2,12):
@@ -97,9 +137,6 @@ for x in range(numberOfRows):
         else:
             toBinary += "0"
 
-    # Get the paper ID given from the FormScanner to use it for logging purposes
-    paperFormScannerID = Matrix[x][0]
-
     # Call function to check if there is mistake from the scanned documents
     if checkParityBit(toBinary, paperFormScannerID):
         # Adding the newly binary seq in the place of Lettered paper ID
@@ -117,14 +154,12 @@ for x in range(numberOfRows):
     for y in range(12):
         if newSortedArray[x][0] != '0':
             arrayBeforeCSV.append(newSortedArray[x])
-            print(newSortedArray[x])
             break
 
 # Set the output csv file path. The default will be used if not provided in the arguments
 output_csvfile_path = "parsed_from_FormScanner.csv"
 if args.output_file:
     output_csvfile_path = args.output_file
-
 
 with open(output_csvfile_path, "w+") as output_csvfile:
     csvWriter = csv.writer(output_csvfile, delimiter=',')
