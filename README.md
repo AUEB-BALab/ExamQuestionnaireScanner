@@ -10,8 +10,8 @@ The following packages are required for converting the scanned pdf files to imag
 ## Process
 The while process consists from 5 basic steps:
 
-	* Scan the exams using a physical scanner (manual step)
-	* Covert the exported PDF files (from the above step) to PNG using the ImageMagick 
-	* Pipe the PNG images to the Java-based FormScanner to retrieve a CSV file with all exams student IDs, paper IDs, and Answers
-	* Parse the CSV files (translates binary and charatcter to the appropriate decimals) using the Python CSVparser.py script
-	* Megre newly exported CSV file with the Excel sheet
+* Scan the exams using a physical scanner (manual step)
+* Covert the exported PDF files (from the above step) to PNG using the ImageMagick 
+* Pipe the PNG images to the Java-based FormScanner to retrieve a CSV file with all exams student IDs, paper IDs, and Answers
+* Parse the CSV files (translates binary and charatcter to the appropriate decimals) using the Python CSVparser.py script
+* Megre newly exported CSV file with the Excel sheet
