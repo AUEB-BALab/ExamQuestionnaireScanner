@@ -9,11 +9,10 @@ The following packages are required for converting the scanned pdf files to imag
 ## How to
 ### Scan the exam papers
 - //TODO
+
 ### Convert the scanned PDF to seperate image files
 - //TODO
-```
-convert input.pdf -threshold 90% questionnaire.png
-```
+
 ### Parse with FormScanner
 - Load the FormScanner template //TODO add more details
 - Load the image files in FormScanner
@@ -22,3 +21,12 @@ convert input.pdf -threshold 90% questionnaire.png
 
 ### Parse the csv file
  - //TODO
+
+## Process
+The while process consists from 5 basic steps:
+
+* Scan the exams using a physical scanner (manual step)
+* Covert the exported PDF files (from the above step) to PNG using the ImageMagick 
+* Pipe the PNG images to the Java-based FormScanner to retrieve a CSV file with all exams student IDs, paper IDs, and Answers
+* Parse the CSV files (translates binary and charatcter to the appropriate decimals) using the Python CSVparser.py script
+* Megre newly exported CSV file with the Excel sheet
