@@ -19,17 +19,26 @@ def checkParityBit(bitString, paperID):
     # if not log it as a mistake
     arrayOfBits = list(bitString)
 
+    # File for logging purposes
+    f = open("error_logs", "a+")
+
     # For Odd numbers of 1s
     if arrayOfBits[0] == '0':
 
         if bitString.count('1') % 2 != 0:
-            logging.error('Paper s ID error!')
-            logging.error('Seems there is an issue with the paper ', str(paperID), 'binary ID.')
+            logging.error('Parity bit check error for ', str(paperID))
+            f.write('Parity bit check error for %s \n' % str(paperID))
+            f.close()
+            return False
     # For Even number of 1s
     else:
         if (bitString.count('1') - 1) % 2 == 0:
-            logging.error('Paper s ID error!')
-            logging.error('Seems there is an issue with the paper ', str(paperID), 'binary ID.')
+            logging.error('Parity bit check error for ', str(paperID))
+            f.write('Parity bit check error for %s \n' % str(paperID))
+            f.close()
+            return False
+
+    return True
 
 # read the input csvfile_path
 csvfile_path = args.input_csv
@@ -63,7 +72,7 @@ for x in range(numberOfRows):
 # all the founded number of records
 newSortedArray = [[0 for x in range(12)] for y in range(numberOfRows)]
 paperFormScannerID = ''
-
+notToInclude = []
 for x in range(numberOfRows):
     mergeIDElements = ''
     for y in range(12,19):
@@ -92,12 +101,26 @@ for x in range(numberOfRows):
     paperFormScannerID = Matrix[x][0]
 
     # Call function to check if there is mistake from the scanned documents
-    checkParityBit(toBinary, paperFormScannerID)
+    if checkParityBit(toBinary, paperFormScannerID):
+        # Adding the newly binary seq in the place of Lettered paper ID
+        newSortedArray[x][1] = int(toBinary[2:], 2)
+    #If not then remove the whole record
+    else:
+        newSortedArray[x][0] = '0'
+        notToInclude.append(x)
 
-    # Adding the newly binary seq in the place of Lettered paper ID
-    newSortedArray[x][1] = int(toBinary[2:], 2)
+# Here we create a new list with our elements excluding the one that failed the parity bit check
+totalNumberPasses = numberOfRows - len(notToInclude)
+arrayBeforeCSV = []
 
-# set the output csv file path. The default will be used if not provided in the arguments
+for x in range(numberOfRows):
+    for y in range(12):
+        if newSortedArray[x][0] != '0':
+            arrayBeforeCSV.append(newSortedArray[x])
+            print(newSortedArray[x])
+            break
+
+# Set the output csv file path. The default will be used if not provided in the arguments
 output_csvfile_path = "parsed_from_FormScanner.csv"
 if args.output_file:
     output_csvfile_path = args.output_file
@@ -105,5 +128,5 @@ if args.output_file:
 
 with open(output_csvfile_path, "w+") as output_csvfile:
     csvWriter = csv.writer(output_csvfile, delimiter=',')
-    csvWriter.writerows([titleLabel] + newSortedArray)
+    csvWriter.writerows([titleLabel] + arrayBeforeCSV)
 
