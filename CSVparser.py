@@ -1,9 +1,18 @@
 import sys
 import csv
 import logging
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("input_csv", 
+    help="The CSV file that contains the results produced by FormScanner")
+parser.add_argument("-o", "--output_file",
+    help="The path for the output file. The default will be used if not set by the user.")
+args = parser.parse_args()
+
 
 # Function to check the parity bit and log if there is any issue
-def checkParityBit( bitString, paperID):
+def checkParityBit(bitString, paperID):
 
     # In this function we break our string and we check
     # if the first string char is 1 then an even number of 1s should be there
@@ -22,15 +31,11 @@ def checkParityBit( bitString, paperID):
             logging.error('Paper s ID error!')
             logging.error('Seems there is an issue with the paper ', str(paperID), 'binary ID.')
 
-
-if len(sys.argv) == 1:
-    logging.error('Expected command line argument was not given.')
-    logging.error('CSV file path is required.')
-    sys.exit(1)
-
+# read the input csvfile_path
+csvfile_path = args.input_csv
 records = []
 
-with open(sys.argv[1], newline='') as csvfile:
+with open(csvfile_path, newline='') as csvfile:
     readCSV = csv.reader(csvfile, delimiter=' ', quotechar='|')
     for row in readCSV:
         records.append(row)
@@ -92,7 +97,13 @@ for x in range(numberOfRows):
     # Adding the newly binary seq in the place of Lettered paper ID
     newSortedArray[x][1] = int(toBinary[2:], 2)
 
-with open("parsed_from_FormScanner.csv", "w+") as my_csv:
-    csvWriter = csv.writer(my_csv, delimiter=',')
+# set the output csv file path. The default will be used if not provided in the arguments
+output_csvfile_path = "parsed_from_FormScanner.csv"
+if args.output_file:
+    output_csvfile_path = args.output_file
+
+
+with open(output_csvfile_path, "w+") as output_csvfile:
+    csvWriter = csv.writer(output_csvfile, delimiter=',')
     csvWriter.writerows([titleLabel] + newSortedArray)
 
