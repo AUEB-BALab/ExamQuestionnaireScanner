@@ -121,18 +121,19 @@ for x in range(numberOfRows):
                 mergeIDElements += str(ord(Matrix[x][y]) - 65)
 
     # Now we are going to pipe the retrieved student ID to get its name
-    if args.auto_deploy:
-        studentName = getStudentByID(mergeIDElements)
 
-        # If the student is not found through an error and log it
-        if str(studentName).__eq__(""):
-            logging.error("Student with ID ", mergeIDElements, " not found")
-            f = open("error_logs", "a+")
-            f.write("In exam {} student with ID {} was not found \n".format(paperFormScannerID, mergeIDElements))
-            f.close()
-        # Now ad the student in the array
-        else:
-            newSortedArray[x][12] = studentName
+    studentName = getStudentByID(mergeIDElements)
+
+    # If the student is not found through an error and log it
+    if str(studentName).__eq__(""):
+        error_message = "Student with ID {} not found".format(mergeIDElements)
+        logging.error(error_message)
+        f = open("error_logs", "a+")
+        f.write("In exam {} student with ID {} was not found \n".format(paperFormScannerID, mergeIDElements))
+        f.close()
+    # Now ad the student in the array
+    else:
+        newSortedArray[x][12] = studentName
 
     # Upon exiting store results in newSortedArray as the first element of all Records
     for j in range(2,12):
