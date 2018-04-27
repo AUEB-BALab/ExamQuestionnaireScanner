@@ -34,15 +34,17 @@ def checkParityBit(bitString, paperID):
     if arrayOfBits[0] == '0':
 
         if bitString.count('1') % 2 != 0:
-            logging.error('Parity bit check error for ', str(paperID))
-            f.write('Parity bit check error for {} \n'.foramt(paperID))
+            #error_message = "Parity bit check error for {}".format(mergeIDElements)
+            logging.error('[LOGGING] Parity bit check error for {} seq {}' . format(str(paperID), bitString))
+            f.write('Parity bit check error for {} \n'.format(paperID))
             f.close()
             return False
     # For Even number of 1s
     else:
         if (bitString.count('1') - 1) % 2 == 0:
-            logging.error('Parity bit check error for ', str(paperID))
-            f.write('Parity bit check error for {} \n' . foramt(paperID))
+            #error_message = "Parity bit check error for {}".format(mergeIDElements)
+            logging.error('[LOGGING] Parity bit check error for {} seq {}' . format(str(paperID), bitString))
+            f.write('Parity bit check error for {} \n' . format(paperID))
             f.close()
             return False
 
@@ -121,19 +123,19 @@ for x in range(numberOfRows):
                 mergeIDElements += str(ord(Matrix[x][y]) - 65)
 
     # Now we are going to pipe the retrieved student ID to get its name
+    if args.auto_deploy:
+        studentName = getStudentByID(mergeIDElements)
 
-    studentName = getStudentByID(mergeIDElements)
-
-    # If the student is not found through an error and log it
-    if str(studentName).__eq__(""):
-        error_message = "Student with ID {} not found".format(mergeIDElements)
-        logging.error(error_message)
-        f = open("error_logs", "a+")
-        f.write("In exam {} student with ID {} was not found \n".format(paperFormScannerID, mergeIDElements))
-        f.close()
-    # Now ad the student in the array
-    else:
-        newSortedArray[x][12] = studentName
+        # If the student is not found through an error and log it
+        if str(studentName).__eq__(""):
+            error_message = "Student with ID {} not found".format(mergeIDElements)
+            logging.error(error_message)
+            f = open("error_logs", "a+")
+            f.write("In exam {} student with ID {} was not found \n".format(paperFormScannerID, mergeIDElements))
+            f.close()
+        # Now ad the student in the array
+        else:
+            newSortedArray[x][12] = studentName
 
     # Upon exiting store results in newSortedArray as the first element of all Records
     for j in range(2,12):
