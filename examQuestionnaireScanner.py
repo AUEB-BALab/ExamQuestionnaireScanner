@@ -20,6 +20,8 @@ parser.add_argument("-c", "--output_csv_file",
     help="The parsed csv file. The default will be used if not set by the user.")
 parser.add_argument("-e", "--exams_sheet",
     help="The path for the exam's excel document. The default will be used if not set by the user.")
+parser.add_argument("-ad", "--auto_deploy", action='store_true',
+    help="A flag for auto-deploying a new sheet inside the above-mentioned excel document with exam's information")
 
 
 args = parser.parse_args()
@@ -52,7 +54,7 @@ def execute_PdfToPngConverter(pdfDirecoty_path, outputImagesDir_path):
     print("- Finished.\n", flush=True)
 
 
-def execute_CsvParser(inputCSV_path, course_info, outputCSV_path):
+def execute_CsvParser(inputCSV_path, course_info, outputCSV_path, autoDeploy_flag):
     print('''## Parsing FormScanner csv ##
         - CSV location :: {}
         - Course info xsls :: {}
@@ -62,7 +64,8 @@ def execute_CsvParser(inputCSV_path, course_info, outputCSV_path):
                     "CSVparser.py", 
                     (inputCSV_path + ".csv"), 
                     "--output_file",
-                    outputCSV_path, 
+                    outputCSV_path,
+                    autoDeploy_flag, 
                     "--exams_sheet",
                     course_info]
                     )
@@ -111,7 +114,12 @@ if args.exams_sheet:
 else:
     exams_sheet_path = os.path.join("course_info", "course_info.xlsx")
 
+if args.auto_deploy:
+    autoDeploy_flag = "-ad"
+else:
+    autoDeploy_flag = ""
+
 
 execute_PdfToPngConverter(scanned_pdf_directory_path, scanned_images_directory_path)
 execute_FormScanner(formScannerJar_path, form_scanner_template_xml_path, scanned_images_directory_path, output_form_scanner_csv_path)
-execute_CsvParser(output_form_scanner_csv_path,exams_sheet_path,output_csv_file_path)
+execute_CsvParser(output_form_scanner_csv_path,exams_sheet_path,output_csv_file_path,autoDeploy_flag)
