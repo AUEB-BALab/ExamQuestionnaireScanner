@@ -22,9 +22,9 @@ To automatically scan a bundle of exam, place the exam sheets on the top tray of
 - Place the **course_info.xlsx** file that contains the information for each student that participates in this year's course, in the ```course_info``` directory. This **course_info.xlsx** file is provided by the course organizer. 
 - Fire up the python script that performs the rest of the steps with the following command:
 ```
-python examQuestionnaireScanner.py
+python examQuestionnaireScanner.py --auto_deploy
 ``` 
-The aforementioned command will read/write all the necessary files from/to the default directories defined in the application. All paths are customizable. 
+The aforementioned command will read/write all the necessary files from/to the default directories defined in the application. All paths are customizable. The ```--auto_deploy``` flag is used to force the tool to read and write to the **course_info.xlsx** file.
 
 See the help for defining custom paths: ```python examQuestionnaireScanner.py -h```
 
