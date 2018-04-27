@@ -1,14 +1,10 @@
 import unittest
+import sys
+sys.path.append("../")
 from CSVparser import checkParityBit
 
 
 class Test(unittest.TestCase):
-
-    def setUp(self):
-        pass
-
-    def test_dummy(self):
-        self.assertTrue(True)
 
     def test_parity_validID(self):
         self.assertEqual(checkParityBit("100010", 12), True)
