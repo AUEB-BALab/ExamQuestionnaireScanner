@@ -2,6 +2,7 @@ import subprocess
 import os 
 import shutil
 import argparse
+from colorama import Fore, Back, Style 
 
 parser = argparse.ArgumentParser()
 
@@ -17,8 +18,8 @@ parser.add_argument("-o", "--output_form_scanner_csv",
     help="The path for the csv file produced by FormScanner. The default will be used if not set by the user.")
 parser.add_argument("-c", "--output_csv_file",
     help="The parsed csv file. The default will be used if not set by the user.")
-parser.add_argument("-d", "--delete_temp_files", action='store_true',
-    help="Delete the image files and the intermidiate csv files after the execution.")
+parser.add_argument("-e", "--exams_sheet",
+    help="The path for the exam's excel document. The default will be used if not set by the user.")
 
 
 args = parser.parse_args()
@@ -51,31 +52,20 @@ def execute_PdfToPngConverter(pdfDirecoty_path, outputImagesDir_path):
     print("- Finished.\n", flush=True)
 
 
-def execute_CsvParser(inputCSV_path, outputCSV_path):
+def execute_CsvParser(inputCSV_path, course_info, outputCSV_path):
     print('''## Parsing FormScanner csv ##
         - CSV location :: {}
+        - Course info xsls :: {}
         - Output CSV location :: {}'''
-        .format(inputCSV_path, outputCSV_path), flush=True)
-    subprocess.call(["python", "CSVparser.py", (inputCSV_path + ".csv"), "--output_file",outputCSV_path])
-    print("- Finished.\n", flush=True)
-
-
-def delete_temp_files(imagesDirectory_path, formscanner_csv):
-    print("## Deleting temp files ##", flush=True)
-    print("\tDeleting images in :: {}".format(imagesDirectory_path), flush=True)
-    # delete images
-    for image_file in os.listdir(imagesDirectory_path):
-        if image_file.endswith(".png"):
-            image_file_path = os.path.join(imagesDirectory_path, image_file)
-            try:
-                if os.path.isfile(image_file_path):
-                    os.unlink(image_file_path)
-            except Exception as e:
-                print(e)
-
-    # delete csv
-    print("\tDeleting form scanner csv :: {}".format(formscanner_csv), flush=True)
-    os.remove((formscanner_csv + ".csv"))
+        .format(inputCSV_path, course_info, outputCSV_path), flush=True)
+    subprocess.call(["python", 
+                    "CSVparser.py", 
+                    (inputCSV_path + ".csv"), 
+                    "--output_file",
+                    outputCSV_path, 
+                    "--exams_sheet",
+                    course_info]
+                    )
     print("- Finished.\n", flush=True)
 
 
@@ -115,13 +105,13 @@ if args.output_csv_file:
 else:
     output_csv_file_path = os.path.join("scan_to_csv", "parsed_results.csv")
 
+# set the exam sheets file path
+if args.exams_sheet:
+    exams_sheet_path = args.exams_sheet
+else:
+    exams_sheet_path = os.path.join("course_info", "course_info.xlsx")
+
 
 execute_PdfToPngConverter(scanned_pdf_directory_path, scanned_images_directory_path)
 execute_FormScanner(formScannerJar_path, form_scanner_template_xml_path, scanned_images_directory_path, output_form_scanner_csv_path)
-execute_CsvParser(output_form_scanner_csv_path,output_csv_file_path)
-if args.delete_temp_files:
-    delete_temp_files(scanned_images_directory_path, output_form_scanner_csv_path)
-
-
-
-
+execute_CsvParser(output_form_scanner_csv_path,exams_sheet_path,output_csv_file_path)
