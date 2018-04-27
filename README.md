@@ -1,5 +1,6 @@
 # Exam Questionnaire Scanner
 ![Build Status](https://travis-ci.com/AntonisGkortzis/ExamQuestionnaireScanner.svg?branch=master)
+# Trying coveralls
 
 ## Dependencies
 The following packages are required for converting the scanned pdf files to images and for parsing the FormScanner output csv file: 
