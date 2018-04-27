@@ -24,8 +24,6 @@ parser.add_argument("-e", "--exams_sheet",
     help="The path for the exam's excel document. The default will be used if not set by the user.")
 parser.add_argument("-ad", "--auto_deploy", action='store_true',
     help="A flag for auto-deploying a new sheet inside the above-mentioned excel document with exam's information")
-
-
 args = parser.parse_args()
 
 
@@ -121,8 +119,10 @@ if args.auto_deploy:
 else:
     autoDeploy_flag = ""
 
-if not args.skip_pdf_conversion:
+if args.skip_pdf_conversion:
+    print("Skipping pdf conversion.", flush=True)
+else:
     execute_PdfToPngConverter(scanned_pdf_directory_path, scanned_images_directory_path)
-    
+
 execute_FormScanner(formScannerJar_path, form_scanner_template_xml_path, scanned_images_directory_path, output_form_scanner_csv_path)
 execute_CsvParser(output_form_scanner_csv_path,exams_sheet_path,output_csv_file_path,autoDeploy_flag)
