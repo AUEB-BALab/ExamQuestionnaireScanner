@@ -8,6 +8,8 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("-p", "--scanned_pdf_directory", 
     help="The directory path that contains the scanned pdf files. The default will be used if not set by the user.")
+parser.add_argument("-sc", "--skip_pdf_conversion", action='store_true',
+    help="A flag for skipping the pdf-to-images conversion")
 parser.add_argument("-i", "--scanned_images_directory",
     help="The path for the directory that hosts the converted images. The default will be used if not set by the user.")
 parser.add_argument("-f", "--form_scanner_path", 
@@ -119,7 +121,8 @@ if args.auto_deploy:
 else:
     autoDeploy_flag = ""
 
-
-execute_PdfToPngConverter(scanned_pdf_directory_path, scanned_images_directory_path)
+if not args.skip_pdf_conversion:
+    execute_PdfToPngConverter(scanned_pdf_directory_path, scanned_images_directory_path)
+    
 execute_FormScanner(formScannerJar_path, form_scanner_template_xml_path, scanned_images_directory_path, output_form_scanner_csv_path)
 execute_CsvParser(output_form_scanner_csv_path,exams_sheet_path,output_csv_file_path,autoDeploy_flag)
