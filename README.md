@@ -1,5 +1,6 @@
 # Exam Questionnaire Scanner
-![Build Status](https://travis-ci.org/AntonisGkortzis/ExamQuestionnaireScanner.svg?branch=master)
+![Build Status](https://travis-ci.com/AntonisGkortzis/ExamQuestionnaireScanner.svg?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/AntonisGkortzis/ExamQuestionnaireScanner/badge.svg?branch=master)](https://coveralls.io/github/AntonisGkortzis/ExamQuestionnaireScanner?branch=master)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ## Dependencies
