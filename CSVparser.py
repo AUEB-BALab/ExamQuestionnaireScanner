@@ -13,8 +13,11 @@ parser.add_argument("-o", "--output_file",
     help="The path for the output file. The default will be used if not set by the user.")
 parser.add_argument("-e", "--exams_sheet",
     help="The path for the exam's excel document. The default will be used if not set by the user.")
+parser.add_argument("-ad", "--auto_deploy", action='store_true',
+    help="A flag for auto-deploying a new sheet inside the above-mentioned excel document with exam's information")
+parser.add_argument("-s", "--sheet_name",
+    help="The name for the newly created spreadsheet with the results")
 args = parser.parse_args()
-
 
 # Function to check the parity bit and log if there is any issue
 def checkParityBit(bitString, paperID):
@@ -45,10 +48,9 @@ def checkParityBit(bitString, paperID):
 
     return True
 
+# Function to get the student's names and ID from Excel sheet
+def getStudentByID(studentID):
 
-def  getStudentByID(studentID):
-
-    # From Professors grade sheet get all the students
     xls_file = pd.ExcelFile(args.exams_sheet, column="", index="")
     df = xls_file.parse('students')
     dfSelect = pd.DataFrame(df, columns=['Α/Α', 'Αρ. Μητρώου', 'Φοιτητής', 'Πατρώνυμο Πρόγρ. Τμήματος'])
@@ -100,7 +102,10 @@ for x in range(numberOfRows):
 # We create a new array where we add the new elements sorted and we also merge the student ID and the paper's ID
 # Elements 0 => String of 7 numbers(Student ID), 1 => String of papers ID, and 2-12 => Student's answers for
 # all the founded number of records
-newSortedArray = [[0 for x in range(13)] for y in range(numberOfRows)]
+if args.auto_deploy:
+    newSortedArray = [[0 for x in range(13)] for y in range(numberOfRows)]
+else:
+    newSortedArray = [[0 for x in range(12)] for y in range(numberOfRows)]
 paperFormScannerID = ''
 notToInclude = []
 
@@ -111,16 +116,18 @@ for x in range(numberOfRows):
 
     # Here we retrieve the students ID from characters and we interpret it in decimals
     mergeIDElements = ''
-    for y in range(12,19):
+    for y in range(12, 19):
         if Matrix[x][y] != '':
                 mergeIDElements += str(ord(Matrix[x][y]) - 65)
 
     # Now we are going to pipe the retrieved student ID to get its name
+
     studentName = getStudentByID(mergeIDElements)
 
     # If the student is not found through an error and log it
     if str(studentName).__eq__(""):
-        logging.error("Student with ID ", mergeIDElements, " not found")
+        error_message = "Student with ID {} not found".format(mergeIDElements)
+        logging.error(error_message)
         f = open("error_logs", "a+")
         f.write("In exam {} student with ID {} was not found \n".format(paperFormScannerID, mergeIDElements))
         f.close()
@@ -175,13 +182,19 @@ with open(output_csvfile_path, "w+") as output_csvfile:
 
 # Now we will create a new sheet in the excel document and we will add the above information
 # | Student ID | Paper ID | Answers [1...10] | StudentNameID |
-df1 = pd.read_csv(output_csvfile_path)
-book = load_workbook(args.exams_sheet)
-writer = pd.ExcelWriter(args.exams_sheet, engine='openpyxl')
-writer.book = book
-writer.sheet = dict((ws.title, ws) for ws in book.worksheets)
+if args.auto_deploy:
 
-# Creating A new sheet and saving it back to excel
-df1.to_excel(writer, sheet_name='autmatedExamsScans', index=False)
-writer.save()
+    # Set name of the spreadsheet. The default will be used if none is provided in the arguments
+    spreadSheetName = "automatedScannedResults"
+    if args.sheet_name:
+        spreadSheetName = args.sheet_name
 
+    df1 = pd.read_csv(output_csvfile_path)
+    book = load_workbook(args.exams_sheet)
+    writer = pd.ExcelWriter(args.exams_sheet, engine='openpyxl')
+    writer.book = book
+    writer.sheet = dict((ws.title, ws) for ws in book.worksheets)
+
+    # Creating A new sheet and saving it back to excel
+    df1.to_excel(writer, sheet_name=spreadSheetName, index=False)
+    writer.save()
