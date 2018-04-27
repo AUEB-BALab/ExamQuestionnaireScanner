@@ -1,5 +1,6 @@
 # Exam Questionnaire Scanner
-![Build Status](https://travis-ci.com/AntonisGkortzis/ExamQuestionnaireScanner.svg?token=G9zDqfcXKyqNsWnKiyZr&branch=master)
+![Build Status](https://travis-ci.org/AntonisGkortzis/ExamQuestionnaireScanner.svg?branch=master)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ## Dependencies
 The following packages are required for converting the scanned pdf files to images and for parsing the FormScanner output csv file: 
@@ -49,3 +50,6 @@ This script will automatically delete the
 
 ## Customize file and directory paths
 All paths that are required for the execution of the tool are customizable. To check the flags necessary to customize the paths run the python scripts with ```-h``` or ```--help``` arguments.
+
+## License
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
