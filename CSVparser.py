@@ -181,22 +181,3 @@ if args.output_file:
 with open(output_csvfile_path, "w+") as output_csvfile:
     csvWriter = csv.writer(output_csvfile, delimiter=',')
     csvWriter.writerows([titleLabel] + arrayBeforeCSV)
-
-# Now we will create a new sheet in the excel document and we will add the above information
-# | Student ID | Paper ID | Answers [1...10] | StudentNameID |
-if args.auto_deploy:
-
-    # Set name of the spreadsheet. The default will be used if none is provided in the arguments
-    spreadSheetName = "automatedScannedResults"
-    if args.sheet_name:
-        spreadSheetName = args.sheet_name
-
-    df1 = pd.read_csv(output_csvfile_path)
-    book = load_workbook(args.exams_sheet)
-    writer = pd.ExcelWriter(args.exams_sheet, engine='openpyxl')
-    writer.book = book
-    writer.sheet = dict((ws.title, ws) for ws in book.worksheets)
-
-    # Creating A new sheet and saving it back to excel
-    df1.to_excel(writer, sheet_name=spreadSheetName, index=False)
-    writer.save()
