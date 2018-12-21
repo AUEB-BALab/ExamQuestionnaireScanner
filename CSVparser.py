@@ -52,18 +52,12 @@ def getStudentByID(studentID):
 
 # Section for managing command line arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("-i", "--input_csv",
+parser.add_argument("input_csv",
                     help="The CSV file that contains the results produced by FormScanner")
-parser.add_argument("-o", "--output_file",
+parser.add_argument("output_file",
                     help="The path for the output file. The default will be used if not set by the user.")
-parser.add_argument("-si","--students_info",
+parser.add_argument("students_info",
                     help="The path where the student IDs and Name are located")
-parser.add_argument("-e", "--exams_sheet",
-                    help="The path for the exam's excel document. The default will be used if not set by the user.")
-parser.add_argument("-ad", "--auto_deploy", action='store_true',
-                    help="A flag for auto-deploying a new sheet inside the above-mentioned excel document with exam's information")
-parser.add_argument("-s", "--sheet_name",
-                    help="The name for the newly created spreadsheet with the results")
 args = parser.parse_args()
 
 # read the input csvfile_path
@@ -164,7 +158,7 @@ for x in range(number_of_students):
             break
 
 # Set the output csv file path. The default will be used if not provided in the arguments
-output_csvfile_path = "parsed_from_FormScanner.csv"
+output_csvfile_path = "final_grades.csv"
 if args.output_file:
     output_csvfile_path = args.output_file
 
