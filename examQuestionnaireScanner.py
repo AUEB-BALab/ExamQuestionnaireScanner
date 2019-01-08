@@ -2,7 +2,6 @@ import subprocess
 import os 
 import shutil
 import argparse
-from colorama import Fore, Back, Style 
 
 parser = argparse.ArgumentParser()
 

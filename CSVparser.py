@@ -1,8 +1,6 @@
 import csv
 import logging
 import argparse
-import pandas as pd
-from openpyxl import load_workbook
 
 
 # Function to check the parity bit and log if there is any issue
