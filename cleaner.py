@@ -13,9 +13,7 @@ def clean_directory(directory):
                 print(e)
 
 
-directories = ["questionnaire_images",
-                "formscanner_csv",
-                "scan_to_csv"]
+directories = ["tmp"]
 
 for direc in directories:
     clean_directory(direc)
