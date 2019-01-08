@@ -96,7 +96,7 @@ else:
 if args.final_grades_output_csv_file_path:
     final_grades_output_csv_file_path = args.final_grades_output_csv_file
 else:
-    final_grades_output_csv_file_path = os.path.join("tmp", "final_grades.csv")
+    final_grades_output_csv_file_path = os.path.join("./", "final_grades.csv")
 
 # set the exam sheets file path
 if args.students_info:
