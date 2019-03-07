@@ -60,6 +60,7 @@ args = parser.parse_args()
 
 # read the input csvfile_path
 csvfile_path = args.input_csv
+print("Input csv file :: {}".format(csvfile_path))
 records = []
 
 with open(csvfile_path, newline='') as csvfile:
@@ -76,6 +77,7 @@ records.pop(0)
 firstRecord = ';'.join(records[0])
 number_of_columns = firstRecord.count(';') + 1
 number_of_students = records.__len__()
+print("Found {} entries".format(number_of_students))
 
 Matrix = [[0 for x in range(number_of_columns)] for y in range(number_of_students)]
 
@@ -109,10 +111,10 @@ for x in range(number_of_students):
 
     # If the student is not found through an error and log it
     if str(studentNameID).__eq__(""):
-        error_message = "Student {} not found".format(mergeIDElements)
+        error_message = "Exam ID: {} Student {} not found".format(paperFormScannerID,mergeIDElements)
         logging.error(error_message)
         f = open("logs/error_logs", "a+")
-        f.write("Exam ID: {} Student {} not found \n".format(paperFormScannerID, mergeIDElements))
+        f.write("{}\n".format(error_message))
         f.close()
     # Otherwise add in the table
     else:
@@ -139,7 +141,8 @@ for x in range(number_of_students):
     # Call function to check if there is mistake from the scanned documents
     if checkParityBit(toBinary, paperFormScannerID):
         # If there is no mistake convert the binary to Integer
-        newSortedArray[x][1] = int(toBinary[2:], 2)
+        newSortedArray[x][1] = int(toBinary[1:], 2)
+        #print("{}::{}:{}".format(paperFormScannerID,toBinary[1:],newSortedArray[x][1]))
     #If not then remove the whole record
     else:
         newSortedArray[x][0] = '0'
