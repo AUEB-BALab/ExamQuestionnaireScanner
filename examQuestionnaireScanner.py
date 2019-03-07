@@ -1,59 +1,69 @@
-import subprocess
-import os
-import os.path
-import shutil
 import argparse
 import logging
+import os
 from pathlib import Path
+import subprocess
 
-
-# TODO: Check if imageMagick exists
 
 def execute_FormScanner(formScanner_path, formScanner_template_path, imagesDirectory_path, outputCSV_path):
-    print('''## Scanning images with FormScanner ##
+    logging.info('''## Scanning images with FormScanner ##
         - Using template :: {}'''
-        .format(formScanner_template_path), flush=True)
-    subprocess.call(['java', '-jar', formScanner_path, formScanner_template_path, imagesDirectory_path, outputCSV_path])
-    print("- Finished.\n", flush=True)
+        .format(formScanner_template_path))
+
+    formscanner_command = ['java',
+                            '-jar',
+                            formScanner_path,
+                            formScanner_template_path,
+                            imagesDirectory_path,
+                            outputCSV_path]
+    logging.debug("Prepared FormScanner command :: {}".format(' '.join(formscanner_command)))
+    subprocess.call(formscanner_command)
+
+    logging.info("FormScanner execution Finished.\n")
 
 
-# TODO: mention https://stackoverflow.com/questions/42928765/convertnot-authorized-aaaa-error-constitute-c-readimage-453
 def execute_PdfToPngConverter(pdfDirecoty_path, outputImagesDir_path):
-    print('''## Converting scanned pdf to images ##
+    logging.info('''## Converting scanned pdf to images ##
         - PDF directory :: {}
         - Output images directory :: {}'''
-        .format(pdfDirecoty_path, outputImagesDir_path), flush=True)
+        .format(pdfDirecoty_path, outputImagesDir_path))
 
     pdf_file_list = os.listdir(pdfDirecoty_path)
     for pdf in pdf_file_list:
-        if pdf.endswith(".pdf"):
+        if Path(pdf).suffix == ".pdf":
             pdf_file_path = os.path.join(pdfDirecoty_path, pdf)
             scanned_image_path = os.path.join(outputImagesDir_path, pdf)
-            print("\t- Converting pdf :: {}".format(pdf_file_path), flush=True)
-            convert_command = ['convert', "-density", "100", pdf_file_path, "-resize", "594x841", (scanned_image_path+"_converted.png")]
+            logging.info("\t- Converting pdf :: {}".format(pdf_file_path))
+            convert_command = ['convert',
+                                "-density","100",
+                                pdf_file_path,
+                                "-resize", "594x841",
+                                (scanned_image_path + "_converted.png")]
             logging.debug("Prepared convert command :: {}".format(' '.join(convert_command)))
-            # subprocess.call(['convert', pdf_file_path, "-threshold", "90%", (scanned_image_path+"_converted.png")])
             subprocess.call(convert_command)
-            # subprocess.call(['convert', pdf_file_path, (scanned_image_path+"_converted.png")])
         else:
-            # print("--- skipping :: {}".format(pdf))
-            pass
-    print("- Finished.\n", flush=True)
+            logging.debug("File {} is not a PDF and will not be converted.".format(pdf))
+
+    logging.info("Conversion finished.\n")
 
 
+# TODO: Replace the subprocess call with a proper python inclusion when the CSVparser script is ready
 def execute_CsvParser(inputCSV_path, outputCSV_path, students_csv):
-    print('''## Parsing FormScanner csv ##
+    logging.info('''## Parsing FormScanner csv ##
         - CSV location :: {}
         - Course info xsls :: {}
         - Output CSV location :: {}'''
-        .format(inputCSV_path, outputCSV_path, students_csv), flush=True)
-    subprocess.call(["python",
+        .format(inputCSV_path, outputCSV_path, students_csv))
+
+    parse_command = ["python",
                     "CSVparser.py",
                     (inputCSV_path + ".csv"),
                     outputCSV_path,
                     students_csv]
-                    )
-    print("- Finished.\n", flush=True)
+    logging.debug("Prepared parse command :: {}".format(' '.join(parse_command)))
+    subprocess.call(parse_command)
+
+    logging.info("Parsing FormScanner CSV finished.\n")
 
 
 def read_arguments():
