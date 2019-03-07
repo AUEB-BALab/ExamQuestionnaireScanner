@@ -6,14 +6,14 @@ import subprocess
 import sys
 
 
-def execute_FormScanner(formScanner_executable, formScanner_template, images_directory, output_csv):
+def execute_FormScanner(formScanner_executable, formScanner_template, images_dir, output_csv):
     """
     Executes the FormScanner for scanning the images and producing the output CSV.
 
     Args:
         formScanner_executable (string): The FormScanner's .jar executable path
         formScanner_template (string): The FormScanner's .xtmpl template path
-        images_directory (string): The converted images' directory path
+        images_dir (string): The converted images' directory path
         output_csv (string): The FormScanner's csv output path
 
     Raises:
@@ -24,15 +24,15 @@ def execute_FormScanner(formScanner_executable, formScanner_template, images_dir
         - Using template :: {}'''
         .format(formScanner_template))
 
-    formscanner_command = ['java',
+    formScanner_cmd = ['java',
                             '-jar',
                             formScanner_executable,
                             formScanner_template,
-                            images_directory,
+                            images_dir,
                             output_csv]
-    logging.debug("Prepared FormScanner command :: {}".format(' '.join(formscanner_command)))
+    logging.debug("Prepared FormScanner command :: {}".format(' '.join(formScanner_cmd)))
     try:
-        subprocess.run(formscanner_command, check=True)
+        subprocess.run(formScanner_cmd, check=True)
     except subprocessfileedProcessError:
         logging.error("FormScanner execution failed.")
         raise
@@ -40,41 +40,41 @@ def execute_FormScanner(formScanner_executable, formScanner_template, images_dir
     logging.info("FormScanner execution Finished.\n")
 
 
-def execute_PdfToPngConverter(pdf_directory, outputImagesDir_path):
+def execute_PdfToPngConverter(pdf_dir, output_images_dir):
     """
     Convert a set of PDF to images. The task is performed by ImageMagick tool.
     Check http://www.imagemagick.org/ for more details.
 
     Args:
-        pdf_directory (string): The directory that contains the PDF files
-        outputImagesDir_path (string): The directory that will store the converted images
+        pdf_dir (string): The directory that contains the PDF files
+        output_images_dir (string): The directory that will store the converted images
 
     Raises:
         subprocessfileedProcessError: Upon conversion failure
     """
-    logging.info('''## Converting scanned pdf to images ##
+    logging.info('''## Converting scanned PDF to images ##
         - PDF directory :: {}
         - Output images directory :: {}'''
-        .format(pdf_directory, outputImagesDir_path))
+        .format(pdf_dir, output_images_dir))
 
-    pdf_file_list = os.listdir(pdf_directory)
+    pdf_file_list = os.listdir(pdf_dir)
     for pdf in pdf_file_list:
         # Skip non-pdf files
         if Path(pdf).suffix != ".pdf":
             logging.debug("File {} is not a PDF and will not be converted.".format(pdf))
             continue
 
-        pdf_file_path = os.path.join(pdf_directory, pdf)
-        scanned_image_path = os.path.join(outputImagesDir_path, pdf)
-        logging.info("\t- Converting pdf :: {}".format(pdf_file_path))
-        convert_command = ['convert',
+        pdf_file = os.path.join(pdf_dir, pdf)
+        scanned_image = os.path.join(output_images_dir, pdf)
+        logging.info("\t- Converting pdf :: {}".format(pdf_file))
+        convert_cmd = ['convert',
                             "-density","100",
-                            pdf_file_path,
+                            pdf_file,
                             "-resize", "594x841",
-                            (scanned_image_path + "_converted.png")]
-        logging.debug("Prepared convert command :: {}".format(' '.join(convert_command)))
+                            (scanned_image + "_converted.png")]
+        logging.debug("Prepared convert command :: {}".format(' '.join(convert_cmd)))
         try:
-            subprocess.run(convert_command, check=True)
+            subprocess.run(convert_cmd, check=True)
         except subprocessfileedProcessError:
             logging.error("PDF conversion process failed.")
             raise
@@ -91,13 +91,13 @@ def execute_CsvParser(inputCSV_path, outputCSV_path, students_csv):
         - Output CSV location :: {}'''
         .format(inputCSV_path, outputCSV_path, students_csv))
 
-    parse_command = ["python",
+    parse_cmd = ["python",
                     "CSVparser.py",
                     (inputCSV_path + ".csv"),
                     outputCSV_path,
                     students_csv]
-    logging.debug("Prepared parse command :: {}".format(' '.join(parse_command)))
-    subprocess.run(parse_command)
+    logging.debug("Prepared parse command :: {}".format(' '.join(parse_cmd)))
+    subprocess.run(parse_cmd)
 
     logging.info("Parsing FormScanner CSV finished.\n")
 
@@ -105,7 +105,7 @@ def execute_CsvParser(inputCSV_path, outputCSV_path, students_csv):
 def read_arguments():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("scanned_pdf_directory",
+    parser.add_argument("scanned_pdf_dir",
         help="The directory path that contains the pdf files generated by scanning the exam sheets.")
     parser.add_argument("formScanner_template",
         help="The FormScanner's template XTMPL file path.")
@@ -124,30 +124,30 @@ def read_arguments():
     return args
 
 
-def parse_arguments(scanned_pdf_directory, output_form_scanner_csv,
+def parse_arguments(scanned_pdf_dir, output_form_scanner_csv,
     form_scanner_path, formScanner_template_xml, final_grades_output_csv_filepath,
     students_info, skip_pdf_conversion):
 
     # initialize path variables
-    if scanned_pdf_directory:
-        if not os.path.isdir(scanned_pdf_directory):
-            logging.error("Scanned PDF directory does not exist in path :: {}".format(scanned_pdf_directory))
+    if scanned_pdf_dir:
+        if not os.path.isdir(scanned_pdf_dir):
+            logging.error("Scanned PDF directory does not exist in path :: {}".format(scanned_pdf_dir))
             raise FileNotFoundError("Invalid scanned PDF directory")
         else:
-            scanned_pdf_directory_path = scanned_pdf_directory
-        logging.debug("Scanned PDF directory :: {}".format(scanned_pdf_directory_path))
+            scanned_pdf_dir_path = scanned_pdf_dir
+        logging.debug("Scanned PDF directory :: {}".format(scanned_pdf_dir_path))
     else:
         logging.warning("Scanned PDF directory no set.")
 
-    scanned_images_directory_path = "tmp" # set the default path
-    logging.debug("Scanned images directory :: {}".format(scanned_images_directory_path))
+    scanned_images_dir = "tmp" # set the default path
+    logging.debug("Scanned images directory :: {}".format(scanned_images_dir))
 
     # set the output formScannerCSV path
     if output_form_scanner_csv:
-        output_form_scanner_csv_path = output_form_scanner_csv
+        formScanner_output_csv = output_form_scanner_csv
     else:
-        output_form_scanner_csv_path = os.path.join("tmp","formScannerCSV")
-    logging.debug("Output FormScanner csv :: {}".format(output_form_scanner_csv_path))
+        formScanner_output_csv = os.path.join("tmp","formScannerCSV")
+    logging.debug("Output FormScanner csv :: {}".format(formScanner_output_csv))
 
     # set the FormScanner executable file path
     if form_scanner_path:
@@ -155,10 +155,10 @@ def parse_arguments(scanned_pdf_directory, output_form_scanner_csv,
             logging.error("FormScanner executable does not exist in path :: {}".format(form_scanner_path))
             raise FileNotFoundError("Invalid FormScanner executable path")
         else:
-            formScannerJar_path = form_scanner_path
+            formScanner_executable = form_scanner_path
     else:
-        formScannerJar_path = os.path.join("lib","formscanner-main-1.1.3.jar")
-    logging.debug("FormScanner executable :: {}".format(formScannerJar_path))
+        formScanner_executable = os.path.join("lib","formscanner-main-1.1.3.jar")
+    logging.debug("FormScanner executable :: {}".format(formScanner_executable))
 
     # set the FromScanner xml template file path
     if not os.path.isfile(formScanner_template_xml):
@@ -172,10 +172,10 @@ def parse_arguments(scanned_pdf_directory, output_form_scanner_csv,
 
     # set the parsed output csv file path
     if final_grades_output_csv_filepath:
-        final_grades_output_csv_file_path = final_grades_output_csv_filepath
+        final_grades_csv = final_grades_output_csv_filepath
     else:
-        final_grades_output_csv_file_path = os.path.join("./", "final_grades.csv")
-    logging.debug("Final grades CSV :: {}".format(final_grades_output_csv_file_path))
+        final_grades_csv = os.path.join("./", "final_grades.csv")
+    logging.debug("Final grades CSV :: {}".format(final_grades_csv))
 
     # set the exam sheets file path
     if not os.path.isfile(students_info):
@@ -186,9 +186,9 @@ def parse_arguments(scanned_pdf_directory, output_form_scanner_csv,
 
     logging.debug("PDF conversion is set to :: {}".format(skip_pdf_conversion))
 
-    return scanned_pdf_directory_path, scanned_images_directory_path, \
-    output_form_scanner_csv_path, formScannerJar_path, formScanner_template_xml, \
-    final_grades_output_csv_file_path, students_info
+    return scanned_pdf_dir_path, scanned_images_dir, \
+    formScanner_output_csv, formScanner_executable, formScanner_template_xml, \
+    final_grades_csv, students_info
 
 
 if __name__ == '__main__':
@@ -199,19 +199,19 @@ if __name__ == '__main__':
     skip_pdf_conversion = True if args.skip_pdf_conversion else False
 
     # Read the command-line arguments
-    scanned_pdf_directory_path, scanned_images_directory_path, \
-    output_form_scanner_csv_path, formScannerJar_path, formScanner_template_xml_path, \
-    final_grades_output_csv_file_path, students_info = parse_arguments(
-    args.scanned_pdf_directory, args.output_form_scanner_csv,
+    scanned_pdf_dir, scanned_images_dir, \
+    formScanner_output_csv, formScanner_executable, formScanner_template, \
+    final_grades_csv, students_info = parse_arguments(
+    args.scanned_pdf_dir, args.output_form_scanner_csv,
     args.form_scanner_path, args.formScanner_template,
     args.final_grades_output_csv, args.students_info, skip_pdf_conversion)
 
     if skip_pdf_conversion:
         logging.info("Skipping PDF to image conversion.")
     else:
-        execute_PdfToPngConverter(scanned_pdf_directory_path, scanned_images_directory_path)
+        execute_PdfToPngConverter(scanned_pdf_dir, scanned_images_dir)
 
-    execute_FormScanner(formScannerJar_path, formScanner_template_xml_path, scanned_images_directory_path, output_form_scanner_csv_path)
-    execute_CsvParser(output_form_scanner_csv_path, final_grades_output_csv_file_path, students_info)
+    execute_FormScanner(formScanner_executable, formScanner_template, scanned_images_dir, formScanner_output_csv)
+    execute_CsvParser(formScanner_output_csv, final_grades_csv, students_info)
 
     logging.info("Execution completed. Process terminated.")
