@@ -9,7 +9,7 @@ The following packages are required for converting the scanned pdf files to imag
 - [ImageMagick](https://www.imagemagick.org/script/index.php) is a free open source application that can create, edit, compose, or convert bitmap images.
 - [Python 3](https://www.python.org/) (or later)
 
-### [Configure ImageMagick](#imagemagick_config)
+### Configure ImageMagick
 - In case that you get permissions errors during the image conversions you should provide the following permissions.
 In the ```/etc/ImageMagick-6/policy.xml``` or ```/etc/ImageMagick/policy.xml``` file change the line <br />
 ```<policy domain="coder" rights="none" pattern="PDF" />``` to <br />
