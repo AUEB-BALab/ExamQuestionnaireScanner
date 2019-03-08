@@ -9,28 +9,34 @@ The following packages are required for converting the scanned pdf files to imag
 - [FormScanner](http://www.formscanner.org/) is a free and open source OMR (optical mark recognition) software for scanning and grading user-filled, multiple choice forms.
 - [ImageMagick](https://www.imagemagick.org/script/index.php) is a free open source application that can create, edit, compose, or convert bitmap images.
 - [Python 3](https://www.python.org/) (or later)
+- [Mercurial](https://www.mercurial-scm.org/) is a free, distributed source control management tool. (Is needed only if you want to clone the FormScanner's repository instead of downloading a snapshot).  
 
 ### Build FormScanner
 1. Clone the repository **OR** download a snapshot of the appropriate version
 
   #### Clone the repository
-   - Clone locally the FormScanner from the following link: <br />
-  ```hg clone http://hg.code.sf.net/u/agkortzis/formscanner formscanner-code``` <br/>
-   - Navigate to the cloned repository <br />
-  ```cd formscanner-code```
-   - Checkout the appropriate branch <br />
-  ```hg update exam_questionnaire_scanner```
+  - Clone locally the FormScanner from the following link:
+  ```sh
+    hg clone http://hg.code.sf.net/u/agkortzis/formscanner formscanner-code
+  ```
+  - Navigate to the cloned repository
+  ```sh
+  cd formscanner-code
+  ```
+  - Checkout the appropriate branch
+  ```sh
+  hg update exam_questionnaire_scanner
+```
 
   #### Download a snapshot
-   - Download the snapshot from the following link
-   ```https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2.zip```
+  - Download the snapshot from the following link <br/>
+  [```https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2.zip```](https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2.zip)
 
-2. Build the project with Maven <br />
-```mvn clean package -Dgpg.skip```
-3. Copy all JARs from <br />
-```formscanner-code/formscanner-distribution/target/formscanner-1.1.2-bin/lib``` to <br />
-a ```lib``` directory (create one if it does not exist) in the ExamQuestionnaireScanner repository root directory.
-
+2. Build the project with Maven
+```sh
+mvn clean package -Dgpg.skip
+```
+3. Copy all JARs from <br/> ```formscanner-code/formscanner-distribution/target/formscanner-1.1.2-bin/lib``` to <br/> a ```lib``` directory (create one if it does not exist) in the ExamQuestionnaireScanner repository root directory.
 
 ### Configure ImageMagick
 - In case that you get permissions errors during the image conversions you should provide the following permissions.
@@ -45,23 +51,14 @@ and increase the values as much as possible.
 ## How to
 This is a quick guide for the necessary steps for autograding the exams.
 ### Scan the exam sheets
-- The first and only manual step of the grading process is the scanning of the exam papers. The goal is to feed the FormScanner with an image file of each exam sheet.
-Unfortunately, our equipment does not offer the functionality of saving scanned documents to image format and thus, we are forced to create a **pdf** file for each scanned set of exam sheets.
-To automatically scan a bundle of exam, place the exam sheets on the top tray of the scanner, as it is illustrated in the following picture.
-![Scanning_setup](media/scanning_setup.jpg)
-- Retrieve the PDF files (one for each scanned bundle of exam sheets).
+- The first step of the grading process is the exam papers' scanning.
+The files generated from the scan process can be PDF files or image files.
+- Retrieve the scanned files and place them in a directory.
 
-The parameters that are necessary for the execution of the tool are the following:
-- ```scanned_pdf_directory``` : The directory that contains the scanned exam sheets in **pdf** format. This directory should preferably store only the scanned pdf files.
-- ```formScanner_template_xml``` : The path for the FormScannerTemplate xml file for the current exam sheet. If a template does not exist (or is not customized for the current exam sheet needs, create one by following the instructions [here](http://www.formscanner.org/quickstart-guide/quickstart-formscanner))
-- ```students_info``` : A csv file that contains the student ids and their names. The current format of this file is the following (the values are not real):
-```
-Α/Α,Αρ. Μητρώου,Φοιτητής,Πατρώνυμο,Πρόγρ. Τμήματος
-1,0000001,AN GOR [0000001],,DMST
-2,0000002,STEF GRG [0000002],,DMST
-```
-- There are additional flags(```-f, -j, -s, -o```) for skipping steps or customizing the output files. If these are not set by the user then the produced files will be generated in the tool's working directory.
+### Prepare a FormScanner template
+//TODO
 
+### Run the tool
 A detailed usage help is presented below:
 ```
 usage: examQuestionnaireScanner.py [-h] [-f OUTPUT_FORM_SCANNER_CSV] [-s]
