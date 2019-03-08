@@ -1,0 +1,12 @@
+A.M.,Paper ID,1,2,3,4,5,6,7,8,9,10,Student Names
+4972113,372,B,A,D,C,B,A,C,B,C,A, Roy
+9871234,376,,,,,,,,,,, Bruce
+2345678,310,C,A,B,D,B,C,A,B,C,D, Owen
+2345678,312,D,A,B,,B,C,B,D,B,C, Owen,duplicated student_id [exam_id:310]
+9999999,314,D,A,B,C,,B,C,D,B,A,0,student_id not found in the student info
+7766550,370,A,,C,A,B,C,B,C,D,B, Rhoda
+3302197,304,B,D,B,A,B,C,D,B,A,D, Tillie
+6666666,368,A,B,C,D,D,C,B,A,,, Milton
+134567,308,,,,,,,,,,,0,student_id not found in the student info
+8870019,374,A,A,A,A,B,B,B,C,C,D, Jean
+1123455,306,A,B,,B,,A,C,B,D,B,0,student_id not found in the student info
