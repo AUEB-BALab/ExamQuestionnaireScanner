@@ -8,6 +8,7 @@ install:
   - sudo apt install imagemagick
 
 script:
+  - ls -la tests
   - python tests/tests.py
   - convert -density 100 tests/scanned/two_scanned_sheets.pdf converted.png
   - ls -la
