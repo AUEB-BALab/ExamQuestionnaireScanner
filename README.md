@@ -68,9 +68,7 @@ optional arguments:
   -o FINAL_GRADES_OUTPUT_CSV, --final_grades_output_csv FINAL_GRADES_OUTPUT_CSV
                         The parsed csv file. The default will be used if not
                         set by the user.
-```  
-
-
+```
 ### Obtain exam sheets info
 After the exam sheets are scanned and the CSV documents are obtained, that hold the scanned info, execute the following:
 
