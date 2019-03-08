@@ -20,5 +20,5 @@ script:
   - make && sudo make install
   - gs --version
   - sudo sed -i -e 's/policy domain="coder" rights="none" pattern="PDF"/policy domain="coder" rights="read|write" pattern="PDF"/g' /etc/ImageMagick-6/policy.xml
-  - convert -density 100 ./tests/scanned/two_scanned_sheets.pdf -resize 594x841 converted.png
+  - sudo convert -density 100 ./tests/scanned/two_scanned_sheets.pdf -resize 594x841 converted.png
   - ls -la
