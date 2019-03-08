@@ -19,5 +19,6 @@ script:
   - ./configure
   - make && sudo make install
   - gs --version
+  - sudo sed -i -e 's/policy domain="coder" rights="none" pattern="PDF"/policy domain="coder" rights="read|write" pattern="PDF"/g' /etc/ImageMagick-6/policy.xml
   - convert ./tests/scanned/two_scanned_sheets.pdf converted.png
   - ls -la
