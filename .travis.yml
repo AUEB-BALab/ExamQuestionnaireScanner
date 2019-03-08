@@ -12,12 +12,13 @@ script:
   - python tests/tests.py
   - which gs
   - which convert
+  - magick -version
   #- git clone --depth 1 git://git.ghostscript.com/ghostpdl.git
   #- cd ghostpdl/
   #- ./autogen.sh
   #- ./configure
   #- make && sudo make install
-  #- gs --version
+  - gs --version
   - sudo sed -i -e 's/policy domain="coder" rights="none" pattern="PDF"/policy domain="coder" rights="read|write" pattern="PDF"/g' /etc/ImageMagick-6/policy.xml
   - convert -density 100 ./tests/scanned/two_scanned_sheets.pdf -resize 594x841 converted.png
   - ls -la
