@@ -4,9 +4,6 @@ python: "3.6"
 
 sudo: required
 
-before_install:
-  - sudo apt-get update
-
 install:
   - sudo apt install imagemagick
 
@@ -17,7 +14,7 @@ script:
   - python tests/tests.py
   - wget https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs926/ghostscript-9.26-linux-x86_64.tgz
   - tar xvzf ghostscript-9.26-linux-x86_64.tgz
-  - cd ghostscript-9.05
+  - cd ghostscript-9.26-linux-x86_64
   - ./configure
   - make && sudo make install
   - gs --version
