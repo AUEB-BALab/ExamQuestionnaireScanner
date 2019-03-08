@@ -4,17 +4,11 @@ python: "3.6"
 dist: xenial
 sudo: required
 
-  #- sudo apt purge ghostscript
-
 before_script:
   - sudo apt update      
   - sudo apt install -y autoconf imagemagick
   - git clone --depth 1 git://git.ghostscript.com/ghostpdl.git
-  - cd ghostpdl/
-  - ./autogen.sh
-  - ./configure
-  - make && sudo make install
-  - gs --version
+  - cd ghostpdl/ && bash autogen.sh && bash configure && make && sudo make install
   - sudo sed -i -e 's/policy domain="coder" rights="none" pattern="PDF"/policy domain="coder" rights="read|write" pattern="PDF"/g' /etc/ImageMagick-6/policy.xml
   - cd ../
 script:
