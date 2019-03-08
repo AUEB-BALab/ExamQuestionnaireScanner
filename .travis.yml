@@ -4,8 +4,11 @@ python: "3.6"
 
 sudo: required
 
+before_install:
+  - sudo apt-get update
+
 install:
-  - sudo apt install libgs9 gsfonts ghostscript imagemagick
+  - sudo apt install ghostscript imagemagick
 
 script:
   - ls -la tests/scanned/
