@@ -5,7 +5,7 @@ python:
 sudo: required
 
 install:
-  - apt install imagemagick
+  - sudo apt install imagemagick
 
 script:
   - python tests/tests.py
