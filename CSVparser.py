@@ -95,19 +95,7 @@ def find_duplicate_ID(arrayWithStudents, currentID):
     return ''
 
 
-if __name__ == '__main__':
-    logging.getLogger().setLevel(logging.INFO)
-    logging.info("Executing script as standalone")
-
-    args = read_arguments()
-
-    logging.info("Input csv file: {}".format(args.input_csv))
-    get_student_info
-    records = get_student_info(args)
-    # The first record is the title of each filed, therefore, we have to remove it.
-    titleLabel = ["A.M.", "Paper ID", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Student Names", "Comments"]
-    records.pop(0)
-    
+def analyze_results(records, titleLabel, args):    
     # Before creating our two dimension array we get the number of fields for each record
     # and then the number of records to offer a dynamic flavor for our script.
     first_record = ';'.join(records[0])
@@ -127,7 +115,6 @@ if __name__ == '__main__':
     total_number_of_fields = 14
     newSortedArray = [[0 for x in range(total_number_of_fields)] for y in range(number_of_students)]
     paperFormScannerID = ''
-    notToInclude = []
 
     for x in range(number_of_students):
 
@@ -141,22 +128,21 @@ if __name__ == '__main__':
                     mergeIDElements += str(ord(Matrix[x][y]) - 65)
 
         # Now we are going to pipe the retrieved student ID to get its name
+        newSortedArray[x][total_number_of_fields - 1] = paperFormScannerID
         studentName = getStudentByID(mergeIDElements)
         comment_message = ''
 
         # If the student is not found through an error and log it
         if str(studentName).__eq__(""):
-            comment_message = "{} not found in the student info {}".format(mergeIDElements, paperFormScannerID)
+            comment_message = "[NOT FOUND] {} in the student info {}".format(mergeIDElements, paperFormScannerID)
             logging.error(comment_message)
             f = open("logs/error_logs", "a+")
             f.write("{}\n".format(comment_message))
             f.close()
-            newSortedArray[x][13] = comment_message
-        # Otherwise add in the table
-        else:
-            newSortedArray[x][total_number_of_fields-1] = studentName
+            newSortedArray[x][total_number_of_fields - 1] = comment_message
+            studentName = "UNKNOWN"
             
-         # Now are going to build a binary number from the Pape's ID
+        # Now are going to build a binary number from the Pape's ID
         newSortedArray[x][1] = str(Matrix[x][1]).replace('|','')
         toBinary = ''
         paperIDlist = list(newSortedArray[x][1])
@@ -173,29 +159,41 @@ if __name__ == '__main__':
             # If there is no mistake convert the binary to Integer
             newSortedArray[x][1] = int(toBinary[1:], 2)
         else:
-            newSortedArray[x][0] = '0'
-            notToInclude.append(x)
+            comment_message += "[PARITY BIT] check error for {}".format(paperFormScannerID)
+            logging.error(comment_message)
+            newSortedArray[x][total_number_of_fields - 1] = comment_message
 
         get_duplicate = find_duplicate_ID(newSortedArray, mergeIDElements)
         if get_duplicate.__ne__(''):
-            comment_message += "{} duplicated A.M. with {}".format(paperFormScannerID, get_duplicate)
-            newSortedArray[x][13] = comment_message
+            comment_message += "[DUPLICATED] {} A.M. with {}".format(paperFormScannerID, get_duplicate)
+            logging.error(comment_message)
+            newSortedArray[x][total_number_of_fields - 1] = comment_message
+            
 
+        # We add the student ID last to have a valid check with find_duplicate method
         newSortedArray[x][0] = mergeIDElements
+        newSortedArray[x][total_number_of_fields-2] = studentName
 
         # Upon exiting store results in newSortedArray as the first element of all Records
         for j in range(2,12):
             newSortedArray[x][j] = Matrix[x][j]
 
-    # Here we create a new list with our elements excluding the one that failed the parity bit check
-    totalNumberPasses = number_of_students - len(notToInclude)
-    arrayBeforeCSV = []
+    return newSortedArray
 
-    for x in range(number_of_students):
-        for y in range(14):
-            if newSortedArray[x][0] != '0':
-                arrayBeforeCSV.append(newSortedArray[x])
-                break
 
-    produceResultsFile(args, titleLabel, arrayBeforeCSV)
+if __name__ == '__main__':
+    logging.getLogger().setLevel(logging.INFO)
+    logging.info("Executing script as standalone")
+
+    args = read_arguments()
+
+    logging.info("Input csv file: {}".format(args.input_csv))
+    titleLabel = ["A.M.", "Paper ID", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Student Names", "Comments"]
+    records = get_student_info(args)
+
+    # The first record is the title of each filed, therefore, we have to remove it.
+    records.pop(0)
+
+    processed_data = analyze_results(records, titleLabel, args)
+    produceResultsFile(args, titleLabel, processed_data)
     logging.info("Execution completed. Process terminated.")
