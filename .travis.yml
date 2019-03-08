@@ -8,7 +8,10 @@ before_install:
   - sudo apt-get update
 
 install:
-  - sudo apt install ghostscript imagemagick
+  - sudo apt-get --purge remove ghostscript
+  - sudo apt-get install libgs9=9.10~dfsg-0ubuntu10
+  - sudo apt-get install -f ghostscript=9.10~dfsg-0ubuntu10
+  - sudo apt install imagemagick
 
 script:
   - ls -la tests/scanned/
