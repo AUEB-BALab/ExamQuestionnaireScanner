@@ -9,5 +9,5 @@ install:
 
 script:
   - python tests/tests.py
-  - convert -density 100 /tests/scanned/two_scanned_sheets.pdf converted.png
+  - convert -density 100 tests/scanned/two_scanned_sheets.pdf converted.png
   - ls -la
