@@ -5,6 +5,8 @@ from pathlib import Path
 import subprocess
 import sys
 
+import CSVparser
+
 
 def execute_FormScanner(formScanner_executable, formScanner_template, images_dir, output_csv):
     """
@@ -33,7 +35,7 @@ def execute_FormScanner(formScanner_executable, formScanner_template, images_dir
     logging.debug("Prepared FormScanner command :: {}".format(' '.join(formScanner_cmd)))
     try:
         subprocess.run(formScanner_cmd, check=True)
-    except subprocessfileedProcessError:
+    except subprocess.ProcessError:
         logging.error("FormScanner execution failed.")
         raise
 
@@ -75,31 +77,18 @@ def execute_PdfToPngConverter(pdf_dir, output_images_dir):
         logging.debug("Prepared convert command :: {}".format(' '.join(convert_cmd)))
         try:
             subprocess.run(convert_cmd, check=True)
-        except subprocessfileedProcessError:
+        except subprocess.ProcessError:
             logging.error("PDF conversion process failed.")
             raise
 
     logging.info("Conversion finished.\n")
 
 
-# TODO 1: Replace the subprocess call with a proper python inclusion when the CSVparser script is ready
-# TODO 2: Remove the function after TODO 1 is satisfied
-def execute_CsvParser(inputCSV_path, outputCSV_path, students_csv):
-    logging.info('''## Parsing FormScanner csv ##
-        - CSV location :: {}
-        - Course info xsls :: {}
-        - Output CSV location :: {}'''
-        .format(inputCSV_path, outputCSV_path, students_csv))
-
-    parse_cmd = ["python",
-                    "CSVparser.py",
-                    (inputCSV_path + ".csv"),
-                    outputCSV_path,
-                    students_csv]
-    logging.debug("Prepared parse command :: {}".format(' '.join(parse_cmd)))
-    subprocess.run(parse_cmd)
-
-    logging.info("Parsing FormScanner CSV finished.\n")
+# calls the CSVparser functions to perform the parsing and
+# write the final output csv file
+def execute_CsvParser(inputCSV_path, students_csv, outputCSV_path):
+    CSVparser.parse_arguments(inputCSV_path, students_csv, outputCSV_path)
+    CSVparser.parse_FormScanner_csv(inputCSV_path, students_csv, outputCSV_path)
 
 
 def read_arguments():
@@ -146,7 +135,7 @@ def parse_arguments(scanned_pdf_dir, output_form_scanner_csv,
     if output_form_scanner_csv:
         formScanner_output_csv = output_form_scanner_csv
     else:
-        formScanner_output_csv = os.path.join("tmp","formScannerCSV")
+        formScanner_output_csv = os.path.join("tmp","formScannerCSV.csv")
     logging.debug("Output FormScanner csv :: {}".format(formScanner_output_csv))
 
     # set the FormScanner executable file path
@@ -157,7 +146,7 @@ def parse_arguments(scanned_pdf_dir, output_form_scanner_csv,
         else:
             formScanner_executable = form_scanner_path
     else:
-        formScanner_executable = os.path.join("lib","formscanner-main-1.1.3.jar")
+        formScanner_executable = os.path.join("lib","formscanner-main-1.1.2.jar")
     logging.debug("FormScanner executable :: {}".format(formScanner_executable))
 
     # set the FromScanner xml template file path
@@ -212,6 +201,6 @@ if __name__ == '__main__':
         execute_PdfToPngConverter(scanned_pdf_dir, scanned_images_dir)
 
     execute_FormScanner(formScanner_executable, formScanner_template, scanned_images_dir, formScanner_output_csv)
-    execute_CsvParser(formScanner_output_csv, final_grades_csv, students_info)
+    execute_CsvParser(formScanner_output_csv, students_info, final_grades_csv)
 
     logging.info("Execution completed. Process terminated.")
