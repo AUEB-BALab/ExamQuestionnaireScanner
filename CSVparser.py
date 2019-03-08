@@ -11,25 +11,14 @@ def checkParityBit(bitString, paperID):
     # if not log it as a mistake
     arrayOfBits = list(bitString)
 
-    # File for logging purposes
-    f = open("logs/error_logs", "a+")
-
     # For Odd numbers of 1s
     if arrayOfBits[0] == '0':
         
         if bitString.count('1') % 2 != 0:
-            #error_message = "Parity bit check error for {}".format(mergeIDElements)
-            logging.error('[LOGGING] Parity bit check error for {} seq {}' . format(str(paperID), bitString))
-            f.write('Parity bit check error for {} \n'.format(paperID))
-            f.close()
             return False
     # For Even number of 1s
     else:
         if (bitString.count('1') - 1) % 2 == 0:
-            #error_message = "Parity bit check error for {}".format(mergeIDElements)
-            logging.error('[LOGGING] Parity bit check error for {} seq {}' . format(str(paperID), bitString))
-            f.write('Parity bit check error for {} \n' . format(paperID))
-            f.close()
             return False
 
     return True
