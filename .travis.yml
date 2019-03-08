@@ -8,9 +8,6 @@ before_install:
   - sudo apt-get update
 
 install:
-  - sudo apt-get --purge remove ghostscript
-  - sudo apt-get install libgs9=9.10~dfsg-0ubuntu10
-  - sudo apt-get install -f ghostscript=9.10~dfsg-0ubuntu10
   - sudo apt install imagemagick
 
 script:
@@ -18,5 +15,11 @@ script:
   - which gs
   - which convert
   - python tests/tests.py
+  - wget https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs926/ghostscript-9.26-linux-x86_64.tgz
+  - tar xvzf ghostscript-9.26-linux-x86_64.tgz
+  - cd ghostscript-9.05
+  - ./configure
+  - make && sudo make install
+  - gs --version
   - convert ./tests/scanned/two_scanned_sheets.pdf converted.png
   - ls -la
