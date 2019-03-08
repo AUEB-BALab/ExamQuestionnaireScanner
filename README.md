@@ -5,18 +5,40 @@
 
 ## Dependencies
 The following packages are required for converting the scanned pdf files to images and for parsing the FormScanner output csv file:
+-
 - [FormScanner](http://www.formscanner.org/) is a free and open source OMR (optical mark recognition) software for scanning and grading user-filled, multiple choice forms.
 - [ImageMagick](https://www.imagemagick.org/script/index.php) is a free open source application that can create, edit, compose, or convert bitmap images.
 - [Python 3](https://www.python.org/) (or later)
+
+### Build FormScanner
+1. Clone the repository **OR** download a snapshot of the appropriate version
+#### Clone the repository
+ 1. Clone locally the FormScanner from the following link: <br />
+```hg clone http://hg.code.sf.net/u/agkortzis/formscanner formscanner-code```
+ - Navigate to the cloned repository <br />
+```cd formscanner-code```
+ - Checkout the appropriate branch <br />
+```hg update exam_questionnaire_scanner```
+#### Download a snapshot
+ 1. Download the snapshot from the following link
+ ```https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2.zip```
+
+
+2. Build the project with Maven <br />
+```mvn clean package -Dgpg.skip```
+- Copy all JARs from <br />
+```formscanner-code/formscanner-distribution/target/formscanner-1.1.2-bin/lib``` to <br />
+a ```lib``` directory (create one if it does not exist) in the ExamQuestionnaireScanner repository root directory.
+
 
 ### Configure ImageMagick
 - In case that you get permissions errors during the image conversions you should provide the following permissions.
 In the ```/etc/ImageMagick-6/policy.xml``` or ```/etc/ImageMagick/policy.xml``` file change the line <br />
 ```<policy domain="coder" rights="none" pattern="PDF" />``` to <br />
 ```<policy domain="coder" rights="read|write" pattern="PDF" />```.
-- In the same file, you might also need to modify the <br /> 
-```<policy domain="resource" name="memory" value="256MiB"/>``` and <br /> 
-```<policy domain="resource" name="disk" value="1GiB"/>``` <br /> 
+- In the same file, you might also need to modify the <br />
+```<policy domain="resource" name="memory" value="256MiB"/>``` and <br />
+```<policy domain="resource" name="disk" value="1GiB"/>``` <br />
 and increase the values as much as possible.
 
 ## How to
