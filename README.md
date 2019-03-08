@@ -12,21 +12,22 @@ The following packages are required for converting the scanned pdf files to imag
 
 ### Build FormScanner
 1. Clone the repository **OR** download a snapshot of the appropriate version
-#### Clone the repository
- 1. Clone locally the FormScanner from the following link: <br />
-```hg clone http://hg.code.sf.net/u/agkortzis/formscanner formscanner-code```
- - Navigate to the cloned repository <br />
-```cd formscanner-code```
- - Checkout the appropriate branch <br />
-```hg update exam_questionnaire_scanner```
-#### Download a snapshot
- 1. Download the snapshot from the following link
- ```https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2.zip```
 
+  #### Clone the repository
+   - Clone locally the FormScanner from the following link: <br />
+  ```hg clone http://hg.code.sf.net/u/agkortzis/formscanner formscanner-code``` <br/>
+   - Navigate to the cloned repository <br />
+  ```cd formscanner-code```
+   - Checkout the appropriate branch <br />
+  ```hg update exam_questionnaire_scanner```
+
+  #### Download a snapshot
+   - Download the snapshot from the following link
+   ```https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2.zip```
 
 2. Build the project with Maven <br />
 ```mvn clean package -Dgpg.skip```
-- Copy all JARs from <br />
+3. Copy all JARs from <br />
 ```formscanner-code/formscanner-distribution/target/formscanner-1.1.2-bin/lib``` to <br />
 a ```lib``` directory (create one if it does not exist) in the ExamQuestionnaireScanner repository root directory.
 
