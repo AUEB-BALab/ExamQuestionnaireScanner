@@ -11,5 +11,5 @@ script:
   - ls -la tests/scanned/
   - which convert
   - python tests/tests.py
-  - convert -density 100 tests/scanned/two_scanned_sheets.pdf converted.png
+  - convert ./tests/scanned/two_scanned_sheets.pdf converted.png
   - ls -la
