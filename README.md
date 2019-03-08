@@ -70,6 +70,28 @@ optional arguments:
                         set by the user.
 ```  
 
+
+### Obtain exam sheets info
+After the exam sheets are scanned and the CSV documents are obtained, that hold the scanned info, execute the following:
+
+- ```CSVparser.py``` : The Python script that fetch all the information, test for paper validity (parity bit function),
+duplicate instances of students A.M., and duplicate answers.
+
+
+The scripts usage information are detailed below:
+
+```
+usage: CSVparser.py [-h] input_csv output_file students_info
+
+positional arguments:
+  input_csv		The directory path that contains the data obtained
+  			from the exam sheets scanning.
+  output_file		The directory path and the name of the results file.
+  students_info		The directory path that contains the tabular file
+  			with the student A.M. and names (given from Prof.).
+```
+
+
 ## Reading the results
 The successful completion of the grading process will create a csv (default name=```final_grades.csv```) that contains the following information:
 ```
