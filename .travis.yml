@@ -6,19 +6,18 @@ sudo: required
 
 install:
   - sudo apt install autoconf imagemagick
-  - sudo apt purge ghostscript
+  #- sudo apt purge ghostscript
 
 script:
   - python tests/tests.py
-  - ls -la tests/scanned/
   - which gs
   - which convert
-  - git clone --depth 1 git://git.ghostscript.com/ghostpdl.git
-  - cd ghostpdl/
-  - ./autogen.sh
-  - ./configure
-  - make && sudo make install
-  - gs --version
+  #- git clone --depth 1 git://git.ghostscript.com/ghostpdl.git
+  #- cd ghostpdl/
+  #- ./autogen.sh
+  #- ./configure
+  #- make && sudo make install
+  #- gs --version
   - sudo sed -i -e 's/policy domain="coder" rights="none" pattern="PDF"/policy domain="coder" rights="read|write" pattern="PDF"/g' /etc/ImageMagick-6/policy.xml
-  - convert ./tests/scanned/two_scanned_sheets.pdf converted.png
+  - convert -density 100 ./tests/scanned/two_scanned_sheets.pdf -resize 594x841 converted.png
   - ls -la
