@@ -5,10 +5,11 @@ python:
 sudo: required
 
 install:
-  - sudo apt install imagemagick
+  - sudo apt install ghostscript imagemagick
 
 script:
   - ls -la tests/scanned/
+  - which gs
   - which convert
   - python tests/tests.py
   - convert ./tests/scanned/two_scanned_sheets.pdf converted.png
