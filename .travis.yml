@@ -5,7 +5,7 @@ python: "3.6"
 sudo: required
 
 install:
-  - sudo apt install ghostscript imagemagick
+  - sudo apt install libgs9 gsfonts ghostscript imagemagick
 
 script:
   - ls -la tests/scanned/
