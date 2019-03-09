@@ -15,4 +15,6 @@ script:
   - python tests/tests.py
   - sudo convert -density 100 tests/scanned/two_scanned_sheets.pdf -resize 594x841 converted.png
   - python3 examQuestionnaireScanner.py tests/scanned/ tests/input_data/FormScanner_test_template.xtmpl tests/input_data/test_student_info.csv
-  - diff final_grades.csv tests/input_data/grades_final_expected.csv
+  - outputFile=$(cat final_grades.csv | sort)
+  - exptectedFile=$(tests/input_data/grades_final_expected.csv | sort)
+  - diff ${outputFile} ${expectedFile}
