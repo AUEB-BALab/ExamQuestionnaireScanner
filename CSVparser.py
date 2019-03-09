@@ -1,7 +1,7 @@
+import argparse
 import csv
 import logging
-import argparse
-
+import os
 
 # Function to check the parity bit and log if there is any issue
 def checkParityBit(bitString, paperID):
@@ -13,7 +13,7 @@ def checkParityBit(bitString, paperID):
 
     # For Odd numbers of 1s
     if arrayOfBits[0] == '0':
-        
+
         if bitString.count('1') % 2 != 0:
             return False
     # For Even number of 1s
@@ -25,10 +25,10 @@ def checkParityBit(bitString, paperID):
 
 
 # Function to get the student's names and ID from a CSV file (it was excel before)
-def getStudentByID(studentID):
+def getStudentByID(studentID, students_info):
 
     # Open file where student IDs and Names are located
-    with open(args.students_info, 'r', encoding='utf8') as csvfile:
+    with open(students_info, 'r', encoding='utf8') as csvfile:
         read_from_csv = csv.reader(csvfile, delimiter=',')
         for row in read_from_csv:
             if studentID in row:
@@ -38,12 +38,7 @@ def getStudentByID(studentID):
 
 
 # Method to compose the results file
-def produceResultsFile(args, titleLable, arrayBeforeCSV):
-    # Set the output csv file path. The default will be used if not provided in the arguments
-    output_csvfile_path = "final_grades.csv"
-    if args.output_file:
-        output_csvfile_path = args.output_file
-
+def produceResultsFile(output_csvfile_path, titleLabel, arrayBeforeCSV):
     with open(output_csvfile_path, "w+", encoding='utf8') as output_csvfile:
         csvWriter = csv.writer(output_csvfile, delimiter=',')
         csvWriter.writerows([titleLabel] + arrayBeforeCSV)
@@ -52,21 +47,39 @@ def produceResultsFile(args, titleLable, arrayBeforeCSV):
 # Method to manage the command line arguments
 def read_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i","--input_csv",
-                    help="The CSV file that contains the results produced by FormScanner")
-    parser.add_argument("-o","--output_file",
-                    help="The path for the output file. The default will be used if not set by the user.")
-    parser.add_argument("-s","--students_info",
-                    help="The path where the student IDs and Name are located")
+    parser.add_argument("input_csv",
+        help="The CSV file that contains the results produced by FormScanner")
+    parser.add_argument("students_info",
+        help="The path where the student IDs and Name are located")
+    parser.add_argument("output_file",
+        help="The path for the output file. The default will be used if not set by the user.")
     args = parser.parse_args()
 
     return args
 
 
+def parse_arguments(input_csv, students_info, output_file):
+    if not os.path.isfile(input_csv):
+        logging.error("FormScanner input csv file does not exist in path :: {}".format(input_csv))
+        raise FileNotFoundError("Invalid FormScanner input csv file")
+        sys.exit(1)
+
+    if not os.path.isfile(students_info):
+        logging.error("Students info input file does not exist in path :: {}".format(students_info))
+        raise FileNotFoundError("Invalid students info input file")
+        sys.exit(1)
+
+    logging.info('''## Parsing FormScanner csv ##
+        - FormScanner input csv :: {}
+        - Students info csv :: {}
+        - Output csv :: {}'''
+        .format(input_csv, students_info, output_file))
+
+
 # Method that retrieves student info from a given csv file
-def get_student_info(args):
+def get_student_info(input_csv):
     records = []
-    with open(args.input_csv, newline='') as csvfile:
+    with open(input_csv, newline='') as csvfile:
         readCSV = csv.reader(csvfile, delimiter=' ', quotechar='|')
         for row in readCSV:
             records.append(row)
@@ -84,7 +97,7 @@ def find_duplicate_ID(arrayWithStudents, currentID):
     return ''
 
 
-def analyze_results(records, titleLabel, args):    
+def analyze_results(records, titleLabel, students_info):
     # Before creating our two dimension array we get the number of fields for each record
     # and then the number of records to offer a dynamic flavor for our script.
     first_record = ';'.join(records[0])
@@ -118,7 +131,7 @@ def analyze_results(records, titleLabel, args):
 
         # Now we are going to pipe the retrieved student ID to get its name
         newSortedArray[x][total_number_of_fields - 1] = paperFormScannerID
-        studentName = getStudentByID(mergeIDElements)
+        studentName = getStudentByID(mergeIDElements, students_info)
         comment_message = ''
 
         # If the student is not found through an error and log it
@@ -130,7 +143,7 @@ def analyze_results(records, titleLabel, args):
             f.close()
             newSortedArray[x][total_number_of_fields - 1] = comment_message
             studentName = "UNKNOWN"
-            
+
         # Now are going to build a binary number from the Pape's ID
         newSortedArray[x][1] = str(Matrix[x][1]).replace('|','')
         toBinary = ''
@@ -157,7 +170,7 @@ def analyze_results(records, titleLabel, args):
             comment_message += "[DUPLICATED] {} A.M. with {}".format(paperFormScannerID, get_duplicate)
             logging.error(comment_message)
             newSortedArray[x][total_number_of_fields - 1] = comment_message
-            
+
 
         # We add the student ID last to have a valid check with find_duplicate method
         newSortedArray[x][0] = mergeIDElements
@@ -170,19 +183,27 @@ def analyze_results(records, titleLabel, args):
     return newSortedArray
 
 
+def parse_FormScanner_csv(input_csv, students_info, output_file):
+    titleLabel = ["A.M.", "Paper ID", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Student Names", "Comments"]
+    records = get_student_info(input_csv)
+
+    # The first record is the title of each filed, therefore, we have to remove it.
+    records.pop(0)
+
+    processed_data = analyze_results(records, titleLabel, students_info)
+    produceResultsFile(output_file, titleLabel, processed_data)
+
+    logging.info("Parsing FormScanner CSV finished.\n")
+
+
 if __name__ == '__main__':
     logging.getLogger().setLevel(logging.INFO)
     logging.info("Executing script as standalone")
 
     args = read_arguments()
+    input_csv = args.input_csv
+    students_csv = args.students_info
+    output_csv = args.output_file
 
-    logging.info("Input csv file: {}".format(args.input_csv))
-    titleLabel = ["A.M.", "Paper ID", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Student Names", "Comments"]
-    records = get_student_info(args)
-
-    # The first record is the title of each filed, therefore, we have to remove it.
-    records.pop(0)
-
-    processed_data = analyze_results(records, titleLabel, args)
-    produceResultsFile(args, titleLabel, processed_data)
-    logging.info("Execution completed. Process terminated.")
+    parse_arguments(input_csv, students_info, output_file)
+    parse_FormScanner_csv(input_csv, students_info, output_file)
