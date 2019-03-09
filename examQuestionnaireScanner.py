@@ -157,7 +157,7 @@ def parse_arguments(scanned_pdf_dir, output_form_scanner_csv,
         else:
             formScanner_executable = form_scanner_path
     else:
-        formScanner_executable = os.path.join("lib","formscanner-main-1.1.3.jar")
+        formScanner_executable = os.path.join("lib","formscanner-main-1.1.2.jar")
     logging.debug("FormScanner executable :: {}".format(formScanner_executable))
 
     # set the FromScanner xml template file path
