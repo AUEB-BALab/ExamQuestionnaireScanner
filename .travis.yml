@@ -19,4 +19,4 @@ script:
   - cat tests/input_data/grades_final_expected.csv | sort | sed 's/>//g'>> expectedFile.txt
   - cat outputFile.txt
   - cat expectedFile.txt
-  - diff outputFile.txt expectedFile.txt
+  - diff -s outputFile.txt expectedFile.txt
