@@ -17,4 +17,6 @@ script:
   - python3 examQuestionnaireScanner.py tests/scanned/ tests/input_data/FormScanner_test_template.xtmpl tests/input_data/test_student_info.csv
   - cat final_grades.csv | sort | sed 's/<//g' >> outputFile.txt
   - cat tests/input_data/grades_final_expected.csv | sort | sed 's/>//g'>> expectedFile.txt
+  - cat outputFile.txt
+  - cat expectedFile.txt
   - diff outputFile.txt expectedFile.txt
