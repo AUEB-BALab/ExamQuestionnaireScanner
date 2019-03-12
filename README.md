@@ -1,6 +1,6 @@
 # Exam Questionnaire Scanner
-![Build Status](https://travis-ci.com/AntonisGkortzis/ExamQuestionnaireScanner.svg?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/AntonisGkortzis/ExamQuestionnaireScanner/badge.svg?branch=master)](https://coveralls.io/github/AntonisGkortzis/ExamQuestionnaireScanner?branch=master)
+[![Build Status](https://travis-ci.org/AntonisGkortzis/ExamQuestionnaireScanner.svg?branch=master)](https://travis-ci.org/AntonisGkortzis/ExamQuestionnaireScanner)
+<!-- [![Coverage Status](https://coveralls.io/repos/github/AntonisGkortzis/ExamQuestionnaireScanner/badge.svg?branch=master)](https://coveralls.io/github/AntonisGkortzis/ExamQuestionnaireScanner?branch=master) -->
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ## Dependencies
@@ -54,10 +54,10 @@ This is a quick guide for the necessary steps for autograding the exams.
 - The first step of the grading process is the exam papers' scanning.
 The files generated from the scan process can be PDF files or image files.
 - Retrieve the scanned files and place them in a directory.
-
+<!--
 ### Prepare a FormScanner template
 //TODO
-
+-->
 ### Run the tool
 A detailed usage help is presented below:
 ```
