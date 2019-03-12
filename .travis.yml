@@ -17,7 +17,7 @@ before_script:
   - wget https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2.zip
   - unzip u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2.zip
   - ls -la
-  - mv formscanner-code/u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2 formscanner
+  - mv u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2 formscanner
   - cd formscanner
   - mvn clean package -Dgpg.skip -Dmaven.javadoc.skip=true
   - cd ..
