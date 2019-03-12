@@ -28,7 +28,7 @@ The following packages are required for converting the scanned pdf files to imag
 
   #### Download a snapshot
   - Download the snapshot from the following link <br/>
-  [```https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2.zip```](https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2.zip)
+  [```https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-c801ee07cf3dba80a7837bdbf88ee12211cb6782.zip```](https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-c801ee07cf3dba80a7837bdbf88ee12211cb6782.zip)
 
 2. Build the project with Maven
 ```sh
