@@ -6,7 +6,7 @@ sudo: required
 
 before_script:
   - sudo apt update      
-  - sudo apt install -y autoconf imagemagick mercurial
+  - sudo apt install -y autoconf imagemagick mercurial unzip
   # configure imagemagick policies
   - sudo sed -i -e 's/policy domain="coder" rights="none" pattern="PDF"/policy domain="coder" rights="read|write" pattern="PDF"/g' /etc/ImageMagick-6/policy.xml
   # clone and install ghostscript
@@ -14,12 +14,13 @@ before_script:
   - cd ghostpdl/ && bash autogen.sh && bash configure && make && sudo make install
   - cd ../
   # clone and build the formscanner executables
-  - hg clone http://hg.code.sf.net/u/agkortzis/formscanner formscanner-code
-  - cd formscanner-code
-  - hg update exam_questionnaire_scanner
+  - wget https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2.zip
+  - unzip u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2.zip
+  - mv formscanner-code/u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2 formscanner
+  - cd formscanner
   - mvn clean package -Dgpg.skip -Dmaven.javadoc.skip=true
   - cd ..
-  - cp formscanner-code/formscanner-distribution/target/formscanner-1.1.2-bin/lib/* lib/
+  - cp formscanner/formscanner-distribution/target/formscanner-1.1.2-bin/lib/* lib/
   - ls -la lib/
 script:
   - python tests/tests.py
