@@ -6,11 +6,24 @@ sudo: required
 
 before_script:
   - sudo apt update      
-  - sudo apt install -y autoconf imagemagick
+  - sudo apt install -y autoconf imagemagick mercurial unzip
+  # configure imagemagick policies
+  - sudo sed -i -e 's/policy domain="coder" rights="none" pattern="PDF"/policy domain="coder" rights="read|write" pattern="PDF"/g' /etc/ImageMagick-6/policy.xml
+  # clone and install ghostscript
   - git clone --depth 1 git://git.ghostscript.com/ghostpdl.git
   - cd ghostpdl/ && bash autogen.sh && bash configure && make && sudo make install
-  - sudo sed -i -e 's/policy domain="coder" rights="none" pattern="PDF"/policy domain="coder" rights="read|write" pattern="PDF"/g' /etc/ImageMagick-6/policy.xml
   - cd ../
+  # clone and build the formscanner executables
+  # TODO: create a variable for zip name and replace the hard coded links and dir names
+  - wget https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-c801ee07cf3dba80a7837bdbf88ee12211cb6782.zip
+  - unzip u-agkortzis-formscanner-c801ee07cf3dba80a7837bdbf88ee12211cb6782.zip
+  - ls -la
+  - mv u-agkortzis-formscanner-c801ee07cf3dba80a7837bdbf88ee12211cb6782 formscanner
+  - cd formscanner
+  - mvn clean package -Dgpg.skip -Dmaven.javadoc.skip=true
+  - cd ..
+  - cp formscanner/formscanner-distribution/target/formscanner-1.1.2-bin/lib/* lib/
+  - ls -la lib/
 script:
   - python tests/tests.py
   - sudo convert -density 100 tests/scanned/two_scanned_sheets.pdf -resize 594x841 converted.png
