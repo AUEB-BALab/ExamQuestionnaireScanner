@@ -1,11 +1,9 @@
 # Exam Questionnaire Scanner
 [![Build Status](https://travis-ci.org/AntonisGkortzis/ExamQuestionnaireScanner.svg?branch=master)](https://travis-ci.org/AntonisGkortzis/ExamQuestionnaireScanner)
-<!-- [![Coverage Status](https://coveralls.io/repos/github/AntonisGkortzis/ExamQuestionnaireScanner/badge.svg?branch=master)](https://coveralls.io/github/AntonisGkortzis/ExamQuestionnaireScanner?branch=master) -->
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-
-## Dependencies
+<!-- [![Coverage Status](https://coveralls.io/repos/github/AntonisGkortzis/ExamQuestionnaireScanner/badge.svg?branch=master)](https://coveralls.io/github/AntonisGkortzis/ExamQuestionnaireScanner?branch=master) -->
+## Dependencies 
 The following packages are required for converting the scanned pdf files to images and for parsing the FormScanner output csv file:
--
 - [FormScanner](http://www.formscanner.org/) is a free and open source OMR (optical mark recognition) software for scanning and grading user-filled, multiple choice forms.
 - [ImageMagick](https://www.imagemagick.org/script/index.php) is a free open source application that can create, edit, compose, or convert bitmap images.
 - [Python 3](https://www.python.org/) (or later)
