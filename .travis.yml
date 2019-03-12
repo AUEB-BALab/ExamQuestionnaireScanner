@@ -14,10 +14,11 @@ before_script:
   - cd ghostpdl/ && bash autogen.sh && bash configure && make && sudo make install
   - cd ../
   # clone and build the formscanner executables
-  - wget https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2.zip
-  - unzip u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2.zip
+  # TODO: create a variable for zip name and replace the hard coded links and dir names
+  - wget https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-c801ee07cf3dba80a7837bdbf88ee12211cb6782.zip
+  - unzip u-agkortzis-formscanner-c801ee07cf3dba80a7837bdbf88ee12211cb6782.zip
   - ls -la
-  - mv u-agkortzis-formscanner-09da5acba6e0328f6d9ef26b62751b33e77875d2 formscanner
+  - mv u-agkortzis-formscanner-c801ee07cf3dba80a7837bdbf88ee12211cb6782 formscanner
   - cd formscanner
   - mvn clean package -Dgpg.skip -Dmaven.javadoc.skip=true
   - cd ..
