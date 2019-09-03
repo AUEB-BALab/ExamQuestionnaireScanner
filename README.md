@@ -7,34 +7,8 @@ The following packages are required for converting the scanned pdf files to imag
 - [FormScanner](http://www.formscanner.org/) is a free and open source OMR (optical mark recognition) software for scanning and grading user-filled, multiple choice forms.
 - [ImageMagick](https://www.imagemagick.org/script/index.php) is a free open source application that can create, edit, compose, or convert bitmap images.
 - [Python 3](https://www.python.org/) (or later)
-- [Mercurial](https://www.mercurial-scm.org/) is a free, distributed source control management tool. (Is needed only if you want to clone the FormScanner's repository instead of downloading a snapshot).  
+- [Java 6](https://www.oracle.com/technetwork/java/javase/downloads/index.html) (or later)
 
-### Build FormScanner
-1. Clone the repository **OR** download a snapshot of the appropriate version
-
-  #### Clone the repository
-  - Clone locally the FormScanner from the following link:
-  ```sh
-    hg clone http://hg.code.sf.net/u/agkortzis/formscanner formscanner-code
-  ```
-  - Navigate to the cloned repository
-  ```sh
-  cd formscanner-code
-  ```
-  - Checkout the appropriate branch
-  ```sh
-  hg update exam_questionnaire_scanner
-```
-
-  #### Download a snapshot
-  - Download the snapshot from the following link <br/>
-  [```https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-c801ee07cf3dba80a7837bdbf88ee12211cb6782.zip```](https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-c801ee07cf3dba80a7837bdbf88ee12211cb6782.zip)
-
-2. Build the project with Maven
-```sh
-mvn clean package -Dgpg.skip
-```
-3. Copy all JARs from <br/> ```formscanner-code/formscanner-distribution/target/formscanner-1.1.2-bin/lib``` to <br/> a ```lib``` directory (create one if it does not exist) in the ExamQuestionnaireScanner repository root directory.
 
 ### Configure ImageMagick
 - In case that you get permissions errors during the image conversions you should provide the following permissions.
@@ -47,7 +21,8 @@ In the ```/etc/ImageMagick-6/policy.xml``` or ```/etc/ImageMagick/policy.xml``` 
 and increase the values as much as possible.
 
 ## How to
-This is a quick guide for the necessary steps for autograding the exams.
+This is a step by step guide for using this tool.
+
 ### Scan the exam sheets
 - The first step of the grading process is the exam papers' scanning.
 The files generated from the scan process can be PDF files or image files.
@@ -87,26 +62,6 @@ optional arguments:
                         The parsed csv file. The default will be used if not
                         set by the user.
 ```
-### Obtain exam sheets info
-After the exam sheets are scanned and the CSV documents are obtained, that hold the scanned info, execute the following:
-
-- ```CSVparser.py``` : The Python script that fetch all the information, test for paper validity (parity bit function),
-duplicate instances of students A.M., and duplicate answers.
-
-
-The scripts usage information are detailed below:
-
-```
-usage: CSVparser.py [-h] input_csv output_file students_info
-
-positional arguments:
-  input_csv		The directory path that contains the data obtained
-  			from the exam sheets scanning.
-  output_file		The directory path and the name of the results file.
-  students_info		The directory path that contains the tabular file
-  			with the student A.M. and names (given from Prof.).
-```
-
 
 ## Reading the results
 The successful completion of the grading process will create a csv (default name=```final_grades.csv```) that contains the following information:
@@ -128,3 +83,4 @@ This script will automatically delete all files that are stored in the ```tmp/``
 
 ## License
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+This tool uses the FormScanner executables, built from a modified version 1.1.2. FormScanner's source code is accessible in [Sourceforge](https://sourceforge.net/projects/formscanner/) and licensed under a GPL v3 license.  
