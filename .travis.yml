@@ -13,17 +13,7 @@ before_script:
   - git clone --depth 1 git://git.ghostscript.com/ghostpdl.git
   - cd ghostpdl/ && bash autogen.sh && bash configure && make && sudo make install
   - cd ../
-  # clone and build the formscanner executables
-  # TODO: create a variable for zip name and replace the hard coded links and dir names
-  - wget https://sourceforge.net/code-snapshots/hg/u/u/u/agkortzis/formscanner/u-agkortzis-formscanner-c801ee07cf3dba80a7837bdbf88ee12211cb6782.zip
-  - unzip u-agkortzis-formscanner-c801ee07cf3dba80a7837bdbf88ee12211cb6782.zip
-  - ls -la
-  - mv u-agkortzis-formscanner-c801ee07cf3dba80a7837bdbf88ee12211cb6782 formscanner
-  - cd formscanner
-  - mvn clean package -Dgpg.skip -Dmaven.javadoc.skip=true
-  - cd ..
-  - cp formscanner/formscanner-distribution/target/formscanner-1.1.2-bin/lib/* lib/
-  - ls -la lib/
+  
 script:
   - python tests/tests.py
   - sudo convert -density 100 tests/scanned/two_scanned_sheets.pdf -resize 594x841 converted.png
