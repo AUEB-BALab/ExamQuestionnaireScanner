@@ -33,7 +33,7 @@ script:
   - diff -s outputFile.txt expectedFile.txt
   # execute fast run (skip pdf conversion)
   - echo "Execute fast run (skip pdf to png conversion)"
-  - python3 examQuestionnaireScanner.py ---skip_pdf_conversion tests/converted_pngs tests/input_data/FormScanner_test_template.xtmpl tests/input_data/test_student_info.csv
+  - python3 examQuestionnaireScanner.py --skip_pdf_conversion tests/converted_pngs tests/input_data/FormScanner_test_template.xtmpl tests/input_data/test_student_info.csv
   - cat final_grades.csv | sort | sed 's/<//g' >> outputFile.txt
   - cat tests/input_data/grades_final_expected.csv | sort | sed 's/>//g'>> expectedFile.txt
   - cat outputFile.txt
