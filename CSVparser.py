@@ -25,14 +25,14 @@ def checkParityBit(bitString, paperID):
 
 
 # Function to get the student's names and ID from a CSV file (it was excel before)
-def getStudentByID(studentID, students_info):
+def get_studentName_by_ID(studentID, students_info):
 
     # Open file where student IDs and Names are located
     with open(students_info, 'r', encoding='utf8') as csvfile:
         read_from_csv = csv.reader(csvfile, delimiter=',')
         for row in read_from_csv:
             if studentID in row:
-                return str(row).split(',').__getitem__(2).replace("'","")
+                return str(row).split(',').__getitem__(1).replace("'","")
     # If not found there return an empty string
     return ""
 
@@ -76,8 +76,8 @@ def parse_arguments(input_csv, students_info, output_file):
         .format(input_csv, students_info, output_file))
 
 
-# Method that retrieves student info from a given csv file
-def get_student_info(input_csv):
+# Method that opens and stores in memory the results of the given FormScanner output csv
+def read_formScanner_output_csv(input_csv):
     records = []
     with open(input_csv, newline='') as csvfile:
         readCSV = csv.reader(csvfile, delimiter=' ', quotechar='|')
@@ -131,7 +131,7 @@ def analyze_results(records, titleLabel, students_info):
 
         # Now we are going to pipe the retrieved student ID to get its name
         newSortedArray[x][total_number_of_fields - 1] = paperFormScannerID
-        studentName = getStudentByID(mergeIDElements, students_info)
+        studentName = get_studentName_by_ID(mergeIDElements, students_info)
         comment_message = ''
 
         # If the student is not found through an error and log it
@@ -184,8 +184,8 @@ def analyze_results(records, titleLabel, students_info):
 
 
 def parse_FormScanner_csv(input_csv, students_info, output_file):
-    titleLabel = ["A.M.", "Paper ID", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Student Names", "Comments"]
-    records = get_student_info(input_csv)
+    titleLabel = ["A.M.", "Exam ID", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Student Name", "Comments"]
+    records = read_formScanner_output_csv(input_csv)
 
     # The first record is the title of each filed, therefore, we have to remove it.
     records.pop(0)

@@ -42,7 +42,7 @@ def execute_FormScanner(formScanner_executable, formScanner_template, images_dir
     logging.info("FormScanner execution Finished.\n")
 
 
-def execute_PdfToPngConverter(pdf_dir, output_images_dir):
+def execute_PdfToPngConverter(pdf_dir, output_images_dir, threshold=90):
     """
     Convert a set of PDF to images. The task is performed by ImageMagick tool.
     Check http://www.imagemagick.org/ for more details.
@@ -54,10 +54,12 @@ def execute_PdfToPngConverter(pdf_dir, output_images_dir):
     Raises:
         subprocessfileedProcessError: Upon conversion failure
     """
+    # TODO: Add threshold level cli argument
     logging.info('''## Converting scanned PDF to images ##
         - PDF directory :: {}
-        - Output images directory :: {}'''
-        .format(pdf_dir, output_images_dir))
+        - Output images directory :: {}
+        - Black and withe threshold :: {}'''
+        .format(pdf_dir, output_images_dir, threshold))
 
     pdf_file_list = os.listdir(pdf_dir)
     for pdf in pdf_file_list:
@@ -70,10 +72,15 @@ def execute_PdfToPngConverter(pdf_dir, output_images_dir):
         scanned_image = os.path.join(output_images_dir, pdf)
         logging.info("\t- Converting pdf :: {}".format(pdf_file))
         convert_cmd = ['convert',
-                            "-density","100",
                             pdf_file,
-                            "-resize", "594x841",
+                            "-threshold", "{}%".format(threshold),
                             (scanned_image + "_converted.png")]
+        # add black and white support
+        # convert_cmd = ['convert',
+        #                     "-density","100",
+        #                     pdf_file,
+        #                     "-resize", "594x841",
+        #                     (scanned_image + "_converted.png")]
         logging.debug("Prepared convert command :: {}".format(' '.join(convert_cmd)))
         try:
             subprocess.run(convert_cmd, check=True)

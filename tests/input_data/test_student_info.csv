@@ -1,21 +1,22 @@
-#,Αρ. Μητρώου,Φοιτητής,Πατρώνυμο,Προγ. Τμήματος
-1,1000000,Kathryn,Robertson,ΔΕΤ
-2,1123456,Floyd,Armstrong,ΔΕΤ
-3,1234567,Flora,Jensen,ΔΕΤ
-4,2345678,Owen,Phillips,ΔΕΤ
-5,2345679,Lillian,Woods,ΟΔΕ
-6,6666666,Milton,Ross,ΔΕΤ
-7,7766550,Rhoda,Harrison,ΔΕΤ
-8,8870019,Jean,Vasquez,ΛΟΧΡΗ
-9,3302197,Tillie,Conner,ΛΟΧΡΗ
-10,4972113,Roy,Nichols,ΟΔΕ
-11,9871234,Bruce,Moreno,ΔΕΤ
-12,5647841,Violet,Kennedy,ΔΕΤ
-13,3657845,Leo,Wolfe,ΔΕΤ
-14,5698745,Thomas,Richardson,ΔΕΤ
-15,1475147,Jon,McGee,ΔΕΤ
-16,2365874,Mason,Holt,ΔΕΤ
-17,6555547,Jordan,West,ΔΕΤ
-18,4587698,Brian,Willis,ΔΕΤ
-19,1247854,Thomas,Obrien,ΔΕΤ
-20,6987451,Alta,Hill,ΔΕΤ
+"Βαθμολόγιο - ΣΕΠΤ-2019, [8119] ΠΡΟΓΡΑΜΜΑΤΙΣΜΟΣ ΙΙ",,,,,
+Αρ. Μητρώου,Ονοματεπώνυμο,Εξ. Φοιτ.,Τμήμα,Βαθμός,Αναγνωριστικό (Απαιτείται)
+1000000,Kathryn Robertson,22,DMST,,random_id_code1
+1123456,Floyd Armstrong,22,,,random_id_code2
+1234567,Flora Jensen,22,DMST,,random_id_code3
+2345678,Owen Phillips,22,,,random_id_code4
+2345679,Lillian Woods,22,,,random_id_code5
+6666666,Milton Ross,22,,,random_id_code6
+7766550,Rhoda Harrison,22,DMST,,random_id_code7
+8870019,Jean Vasquez,22,,,random_id_code8
+3302197,Tillie Conner,22,DMST,,random_id_code9
+4972113,Roy Nichols,22,,,random_id_code10
+9871234,Bruce Moreno,22,,,random_id_code11
+5647841,Violet Kennedy,22,DMST,,random_id_code1
+3657845,Leo Wolfe,22,,,random_id_code13
+5698745,Thomas Richardson,22,,,random_id_code14
+1475147,Jon McGee,22,DMST,,random_id_code15
+2365874,Mason Holt,22,,,random_id_code16
+6555547,Jordan West,22,DMST,,random_id_code17
+4587698,Brian Willis,22,DMST,,random_id_code18
+1247854,Thomas Obrien,22,,,random_id_code19
+6987451,Alta Hill,22,,,random_id_code20
