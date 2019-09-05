@@ -63,10 +63,19 @@ optional arguments:
                         set by the user.
 ```
 
+## Test run
+In order to perform a full run (that includes pdf-to-png conversion) execute the following command:
+
+```python examQuestionnaireScanner.py tests/scanned/ tests/input_data/FormScanner_test_template.xtmpl tests/input_data/test_student_info.csv```
+
+Similarly, if you want to skip the pdf-to-png conversion use the ```--skip_pdf_conversion``` flag as demostrated below:
+
+```python examQuestionnaireScanner.py --skip_pdf_conversion tests/converted_pngs tests/input_data/FormScanner_test_template.xtmpl tests/input_data/test_student_info.csv```
+
 ## Reading the results
 The successful completion of the grading process will create a csv (default name=```final_grades.csv```) that contains the following information:
 ```
-A.M.,Paper ID,1,2,3,4,5,6,7,8,9,10,Student Names
+A.M.,Exam ID,1,2,3,4,5,6,7,8,9,10,Student Name
 0000001,107,B,A,,C,A,B,,B,D,A, AN GOR [0000001]
 0000002,112,D,B,B,C,B,C,,B,A,B, STEF GRG [0000002]
 ```
@@ -81,6 +90,11 @@ Before or after the execution of the scripts you might need to clean up the dire
 
 This script will automatically delete all files that are stored in the ```tmp/``` directory.
 
+## Limitations and Troubleshooting
+- If there are many missed responces in the scanned exams you might need to re-adjust the density and the threshold of the FormScanner template. You can do that dirrectly in the xtmpl file. 
+- White spaces in the input filenames (pdfs, FormScanner template, etc.) should be avoided since they cause unexpected behaviour to the tool.
+
 ## License
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 This tool uses the FormScanner executables, built from a modified version 1.1.2. FormScanner's source code is accessible in [Sourceforge](https://sourceforge.net/projects/formscanner/) and licensed under a GPL v3 license.  
