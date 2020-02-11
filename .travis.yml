@@ -15,27 +15,27 @@ before_script:
   - cd ../
   
 script:
-  - echo "Executing tests..."
+  - echo "@ Executing tests..."
   - python tests/tests.py
   # execute test conversion #1 (color and resize)
-  - echo "Test pdf conversion 1 (color and resize)"
+  - echo "@@ Test pdf conversion 1 (color and resize)"
   - sudo convert -density 100 tests/scanned/two_scanned_sheets.pdf -resize 594x841 converted.png
   # execute test converion #2 (monochrome)
-  - echo "Test pdf conversion 2 (monochrome)"
+  - echo "@@ Test pdf conversion 2 (monochrome)"
   - sudo convert tests/scanned/two_scanned_sheets.pdf -threshold 90% converted.png
   # execute normal run (include pdf to png conversion)
-  - echo "Execute normal run (include pdf to png conversion)"
+  - echo "@@ Execute normal run (include pdf to png conversion)"
   - python3 examQuestionnaireScanner.py tests/scanned/ tests/input_data/FormScanner_test_template.xtmpl tests/input_data/test_student_info.csv
   - cat final_grades.csv | sort | sed 's/<//g' >> outputFile.txt
   - cat tests/input_data/grades_final_expected.csv | sort | sed 's/>//g'>> expectedFile.txt
-  - cat outputFile.txt
-  - cat expectedFile.txt
+  #- cat outputFile.txt
+  #- cat expectedFile.txt
   - diff -s outputFile.txt expectedFile.txt
   # execute fast run (skip pdf conversion)
-  - echo "Execute fast run (skip pdf to png conversion)"
+  - echo "@@ Execute fast run (skip pdf to png conversion)"
   - python3 examQuestionnaireScanner.py --skip_pdf_conversion tests/converted_pngs tests/input_data/FormScanner_test_template.xtmpl tests/input_data/test_student_info.csv
   - cat final_grades.csv | sort | sed 's/<//g' >> outputFile.txt
   - cat tests/input_data/grades_final_expected.csv | sort | sed 's/>//g'>> expectedFile.txt
-  - cat outputFile.txt
-  - cat expectedFile.txt
+  #- cat outputFile.txt
+  #- cat expectedFile.txt
   - diff -s outputFile.txt expectedFile.txt
