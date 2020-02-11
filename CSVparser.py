@@ -2,6 +2,7 @@ import argparse
 import csv
 import logging
 import os
+import sys
 
 # Function to check the parity bit and log if there is any issue
 def checkParityBit(bitString, paperID):
@@ -205,5 +206,5 @@ if __name__ == '__main__':
     students_csv = args.students_info
     output_csv = args.output_file
 
-    parse_arguments(input_csv, students_info, output_file)
-    parse_FormScanner_csv(input_csv, students_info, output_file)
+    parse_arguments(input_csv, students_csv, output_csv)
+    parse_FormScanner_csv(input_csv, students_csv, output_csv)

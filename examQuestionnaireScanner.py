@@ -35,7 +35,7 @@ def execute_FormScanner(formScanner_executable, formScanner_template, images_dir
     logging.debug("Prepared FormScanner command :: {}".format(' '.join(formScanner_cmd)))
     try:
         subprocess.run(formScanner_cmd, check=True)
-    except subprocess.ProcessError:
+    except Exception:
         logging.error("FormScanner execution failed.")
         raise
 
@@ -84,7 +84,7 @@ def execute_PdfToPngConverter(pdf_dir, output_images_dir, threshold=90):
         logging.debug("Prepared convert command :: {}".format(' '.join(convert_cmd)))
         try:
             subprocess.run(convert_cmd, check=True)
-        except subprocess.ProcessError:
+        except Exception:
             logging.error("PDF conversion process failed.")
             raise
 
