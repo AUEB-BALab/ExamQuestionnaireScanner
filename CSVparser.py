@@ -70,11 +70,11 @@ def parse_arguments(input_csv, students_info, output_file):
         raise FileNotFoundError("Invalid students info input file")
         sys.exit(1)
 
-    logging.info('''## Parsing FormScanner csv ##
-        - FormScanner input csv :: {}
-        - Students info csv :: {}
-        - Output csv :: {}'''
-        .format(input_csv, students_info, output_file))
+    logging.info('''Parsing FormScanner CSV ...
+        - FormScanner input CSV: {}
+        - Students info CSV: {}
+        - Final results output CSV: {}'''
+        .format(os.path.abspath(input_csv), os.path.abspath(students_info), os.path.abspath(output_file)))
 
 
 # Method that opens and stores in memory the results of the given FormScanner output csv
@@ -104,7 +104,7 @@ def analyze_results(records, titleLabel, students_info):
     first_record = ';'.join(records[0])
     number_of_columns = first_record.count(';') + 1
     number_of_students = records.__len__()
-    logging.info("Found {} entries".format(number_of_students))
+    logging.info("Found {} exam entries to parse. Parsing results:".format(number_of_students))
 
     Matrix = [[0 for x in range(number_of_columns)] for y in range(number_of_students)]
     for x in range(number_of_students):
@@ -137,8 +137,8 @@ def analyze_results(records, titleLabel, students_info):
 
         # If the student is not found through an error and log it
         if str(studentName).__eq__(""):
-            comment_message = "[NOT FOUND] {} in the student info {}".format(mergeIDElements, paperFormScannerID)
-            logging.error(comment_message)
+            comment_message = "[NOT FOUND] {} was not found in the student_info. File:{}".format(mergeIDElements, paperFormScannerID)
+            logging.warning(comment_message)
             f = open("logs/error_logs", "a+")
             f.write("{}\n".format(comment_message))
             f.close()
@@ -163,13 +163,13 @@ def analyze_results(records, titleLabel, students_info):
             newSortedArray[x][1] = int(toBinary[1:], 2)
         else:
             comment_message += "[PARITY BIT] check error for {}".format(paperFormScannerID)
-            logging.error(comment_message)
+            logging.warning(comment_message)
             newSortedArray[x][total_number_of_fields - 1] = comment_message
 
         get_duplicate = find_duplicate_ID(newSortedArray, mergeIDElements)
         if get_duplicate.__ne__(''):
             comment_message += "[DUPLICATED] {} A.M. with {}".format(paperFormScannerID, get_duplicate)
-            logging.error(comment_message)
+            logging.warning(comment_message)
             newSortedArray[x][total_number_of_fields - 1] = comment_message
 
 
@@ -193,8 +193,6 @@ def parse_FormScanner_csv(input_csv, students_info, output_file):
 
     processed_data = analyze_results(records, titleLabel, students_info)
     produceResultsFile(output_file, titleLabel, processed_data)
-
-    logging.info("Parsing FormScanner CSV finished.\n")
 
 
 if __name__ == '__main__':

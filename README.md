@@ -4,8 +4,8 @@
 <!-- [![Coverage Status](https://coveralls.io/repos/github/AntonisGkortzis/ExamQuestionnaireScanner/badge.svg?branch=master)](https://coveralls.io/github/AntonisGkortzis/ExamQuestionnaireScanner?branch=master) -->
 ## Dependencies 
 The following packages are required for converting the scanned pdf files to images and for parsing the FormScanner output csv file:
-- [FormScanner](http://www.formscanner.org/) is a free and open source OMR (optical mark recognition) software for scanning and grading user-filled, multiple choice forms.
-- [ImageMagick](https://www.imagemagick.org/script/index.php) is a free open source application that can create, edit, compose, or convert bitmap images.
+- [FormScanner](http://www.formscanner.org/) is a free and open source OMR (optical mark recognition) software for scanning and grading user-filled, multiple choice forms. The binary files of FormScanner are included in the ```lib``` directory of this repository and thus, it is not required to be manually installed.  
+- [ImageMagick](https://www.imagemagick.org/script/index.php) is a free open source application that can create, edit, compose, or convert bitmap images. For Debian/Ubuntu distributions install with ```sudo apt install imagemagick``` command.
 - [Python 3](https://www.python.org/) (or later)
 - [Java 6](https://www.oracle.com/technetwork/java/javase/downloads/index.html) (or later)
 
@@ -18,19 +18,33 @@ In the ```/etc/ImageMagick-6/policy.xml``` or ```/etc/ImageMagick/policy.xml``` 
 - In the same file, you might also need to modify the <br />
 ```<policy domain="resource" name="memory" value="256MiB"/>``` and <br />
 ```<policy domain="resource" name="disk" value="1GiB"/>``` <br />
-and increase the values as much as possible.
+and increase the values as much as possible. For a bundle of 100~150 exams 3~4GiBs of RAM are required. 
 
 ## How to
-This is a step by step guide for using this tool.
+This is a step by step guide for using this tool. The four main steps are briefly presented below and described in details in their dedicated subsections.
+ - [Step 1](#scan-the-exam-sheets): Scan the exam sheets
+ - [Step 2](#generate-a-formscanner-template): Generate a FormScanner template for the current exam layout (only if needed) 
+ - [Step 3](#prepare-the-students_info-file): Prepare the file containing the examination participants information
+ - [Step 4](#run-the-tool): Run the tool
+ - [Step 5](#manually-resolve-errors): Check the results and manually resolve any errors (if needed) 
 
 ### Scan the exam sheets
 - The first step of the grading process is the exam papers' scanning.
 The files generated from the scan process can be PDF files or image files.
 - Retrieve the scanned files and place them in a directory.
-<!--
-### Prepare a FormScanner template
-//TODO
--->
+- The scanner's scanning resolution should be set to 300dpi, color or gray-scale.
+
+### Generate a FormScanner template
+A FormScanner template defines the scanning area of a questionnaire form, the number, the position  and the types of the questions. When a new examination form is created the corresponding FormScanner template should be generated as well. The FormScanner website offers a series of [video tutorials](http://www.formscanner.org/video-tutorials) on how to generate examination forms and their corresponding templates. 
+
+**Important**: For the needs of Programming II examination, we use the ```programming-II-formscanner-template.xtmpl``` file, located at the root directory of the repository.  
+
+### Prepare the students_info input file
+This file contains the information of the current examination participants. It is required to cross check the ID number in order to verify that 1) participants are enrolled in the course and 2) there are mistakes by participants when filling their Id number which can lead to duplicated entries or matching failures. 
+The file should have a format of CSV (strictly using comma as field separator) and contain the following fields: ```AM,Student Name```
+Any headers and/or trailing fields are omitted. An example of such a CSV file is presented in the following figure: 
+<img src="./docs/students_info_sample.png" width="600"/>
+
 ### Run the tool
 A detailed usage help is presented below:
 ```
@@ -63,27 +77,28 @@ optional arguments:
                         set by the user.
 ```
 
-## Test run
-In order to perform a full run (that includes pdf-to-png conversion) execute the following command:
+### Manually resolve errors
+The successful completion of the parsing process will produce output information similar to the following screen-shot: 
 
-```python examQuestionnaireScanner.py tests/scanned/ tests/input_data/FormScanner_test_template.xtmpl tests/input_data/test_student_info.csv```
+<img src="./docs/execution_results.png" width="600"/>
 
-Similarly, if you want to skip the pdf-to-png conversion use the ```--skip_pdf_conversion``` flag as demostrated below:
+At the end of the logged information two warnings ```[NOT FOUND]``` are logged. These warnings refer to participants IDs that did not exist in the students_info file. These cases should be resolved manually by checking the physical exam and filling the missing information in the output csv default name=```final_grades.csv```) that contains the following information: 
 
-```python examQuestionnaireScanner.py --skip_pdf_conversion tests/converted_pngs tests/input_data/FormScanner_test_template.xtmpl tests/input_data/test_student_info.csv```
+<img src="./docs/final_grades_sample.png" width="600"/>
 
-## Reading the results
-The successful completion of the grading process will create a csv (default name=```final_grades.csv```) that contains the following information:
-```
-A.M.,Exam ID,1,2,3,4,5,6,7,8,9,10,Student Name
-0000001,107,B,A,,C,A,B,,B,D,A, AN GOR [0000001]
-0000002,112,D,B,B,C,B,C,,B,A,B, STEF GRG [0000002]
-```
+Entries 14 and 15 represent the aforementioned warnings. We should manually check the exams (using the Exam ID field as a reference) and fill in the missing ID and student name fields. In cases that the student was not enrolled in the course we should mention it in the comments field.
 
-## Resolving the errors
-Cases that failed to parse (due to *parity check error* or *invalid student id*) will be logged in a file and also presented at the console at the end of the execution. The log file is named ```error_logs```.
+The log will mention the *image's file name* in order to manually inspect and resolve the error. Cases that failed to parse (due to *parity check error* or *invalid student id*) will be logged in a file and also presented at the console at the end of the execution. The log file is named ```error_logs```.
+ 
 
-The log will mention the *image's file name* in order to manually inspect and resolve the error. Corrections can be applied directly on the ```final_grades.csv``` file.  
+## Perform a manual inspection
+If the output contains several warnings (indication that one of the input files or/and parameters are faulty) or you just want to ensure that everything went fine with the process you can do a manual optical inspection of the results. The process is described in the following steps: 
+1. Open the FormScanner application with ```java -jar ./lib/formscanner-main-1.1.2.jar```
+2. Load the template that corresponds to the current exam: ```template --> load.template``` 
+3. Load the images generated from the scanned PDF: ```file --> open.images```
+4. Select an image from the left list and press ```ctrl+I```. The 5-step process is successful when  the red dots match the circles filled by the participant.
+
+<img src="./docs/manual_inspection_screen.png" width="600"/>
 
 ## Cleaning the temporarily created files
 Before or after the execution of the scripts you might need to clean up the directories from files generated by previous runs of the tool. This can be done with the ```python cleaner.py``` script.
@@ -91,8 +106,8 @@ Before or after the execution of the scripts you might need to clean up the dire
 This script will automatically delete all files that are stored in the ```tmp/``` directory.
 
 ## Limitations and Troubleshooting
-- If there are many missed responces in the scanned exams you might need to re-adjust the density and the threshold of the FormScanner template. You can do that dirrectly in the xtmpl file. 
-- White spaces in the input filenames (pdfs, FormScanner template, etc.) should be avoided since they cause unexpected behaviour to the tool.
+- If there are many missed responses in the scanned exams you might need to re-adjust the density and the threshold of the FormScanner template. You can do that directly in the xtmpl file. 
+- White spaces in the input filenames (pdfs, FormScanner template, etc.) should be avoided since they cause unexpected behavior to the tool.
 
 ## License
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)

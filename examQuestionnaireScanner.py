@@ -22,8 +22,8 @@ def execute_FormScanner(formScanner_executable, formScanner_template, images_dir
         subprocessfileedProcessError: Upon FormScanner execution failure
     """
 
-    logging.info('''## Scanning images with FormScanner ##
-        - Using template :: {}'''
+    logging.info('''Scanning images with FormScanner ...
+        - FormScanner template: {}'''
         .format(formScanner_template))
 
     formScanner_cmd = ['java',
@@ -39,8 +39,6 @@ def execute_FormScanner(formScanner_executable, formScanner_template, images_dir
         logging.error("FormScanner execution failed.")
         raise
 
-    logging.info("FormScanner execution Finished.\n")
-
 
 def execute_PdfToPngConverter(pdf_dir, output_images_dir, threshold=90):
     """
@@ -55,11 +53,11 @@ def execute_PdfToPngConverter(pdf_dir, output_images_dir, threshold=90):
         subprocessfileedProcessError: Upon conversion failure
     """
     # TODO: Add threshold level cli argument
-    logging.info('''## Converting scanned PDF to images ##
-        - PDF directory :: {}
-        - Output images directory :: {}
-        - Black and withe threshold :: {}'''
-        .format(pdf_dir, output_images_dir, threshold))
+    logging.info('''Converting scanned PDF to images ...
+        - PDF directory: {}
+        - Output images directory: {}
+        - Black and white threshold: {}'''
+        .format(pdf_dir, os.path.abspath(output_images_dir), threshold))
 
     pdf_file_list = os.listdir(pdf_dir)
     for pdf in pdf_file_list:
@@ -70,7 +68,7 @@ def execute_PdfToPngConverter(pdf_dir, output_images_dir, threshold=90):
 
         pdf_file = os.path.join(pdf_dir, pdf)
         scanned_image = os.path.join(output_images_dir, pdf)
-        logging.info("\t- Converting pdf :: {}".format(pdf_file))
+        logging.info("Converting pdf: {} ...".format(pdf_file))
         convert_cmd = ['convert',
                             pdf_file,
                             "-threshold", "{}%".format(threshold),
@@ -87,8 +85,6 @@ def execute_PdfToPngConverter(pdf_dir, output_images_dir, threshold=90):
         except Exception:
             logging.error("PDF conversion process failed.")
             raise
-
-    logging.info("Conversion finished.\n")
 
 
 # calls the CSVparser functions to perform the parsing and
@@ -127,13 +123,13 @@ def parse_arguments(scanned_pdf_dir, output_form_scanner_csv,
     # initialize path variables
     if scanned_pdf_dir:
         if not os.path.isdir(scanned_pdf_dir):
-            logging.error("Scanned PDF directory does not exist in path :: {}".format(scanned_pdf_dir))
+            logging.error("Scanned PDF directory does not exist in path: {}".format(scanned_pdf_dir))
             raise FileNotFoundError("Invalid scanned PDF directory")
         else:
             scanned_pdf_dir_path = scanned_pdf_dir
-        logging.debug("Scanned PDF directory :: {}".format(scanned_pdf_dir_path))
+        logging.debug("Scanned PDF directory: {}".format(scanned_pdf_dir_path))
     else:
-        logging.warning("Scanned PDF directory no set.")
+        logging.warning("Scanned PDF directory is not set.")
 
     scanned_images_dir = "tmp" # set the default path
     logging.debug("Scanned images directory :: {}".format(scanned_images_dir))
@@ -171,7 +167,7 @@ def parse_arguments(scanned_pdf_dir, output_form_scanner_csv,
         final_grades_csv = final_grades_output_csv_filepath
     else:
         final_grades_csv = os.path.join("./", "final_grades.csv")
-    logging.debug("Final grades CSV :: {}".format(final_grades_csv))
+    logging.debug("Final grades CSV: {}".format(final_grades_csv))
 
     # set the exam sheets file path
     if not os.path.isfile(students_info):
@@ -210,4 +206,4 @@ if __name__ == '__main__':
     execute_FormScanner(formScanner_executable, formScanner_template, scanned_images_dir, formScanner_output_csv)
     execute_CsvParser(formScanner_output_csv, students_info, final_grades_csv)
 
-    logging.info("Execution completed. Process terminated.")
+    logging.info("Execution completed. Open the {} file to check the results.".format(os.path.abspath(final_grades_csv)))
