@@ -16,6 +16,7 @@ before_script:
   
 script:
   - echo "@ Executing tests..."
+  - cd bin/
   - python tests/tests.py
   # execute test conversion #1 (color and resize)
   - echo "@@ Test pdf conversion 1 (color and resize)"
