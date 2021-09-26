@@ -5,7 +5,7 @@
 
 ## Dependencies 
 The following packages are required for converting the scanned pdf files to images and for parsing the FormScanner output csv file:
-- [FormScanner](http://www.formscanner.org/) is a free and open source OMR (optical mark recognition) software for scanning and grading user-filled, multiple choice forms. The binary files of FormScanner are included in the ```lib``` directory of this repository and thus, it is not required to be manually installed.  
+- [FormScanner](http://www.formscanner.org/) is a free and open source OMR (optical mark recognition) software for scanning and grading user-filled, multiple choice forms. The binary files of FormScanner are included in the ```lib``` directory of this repository and thus, it is not required to be manually installed. Our tool uses a modified Formscanner version 1.1.2 in which we fix a missing Maven dependency and modify the output filename. The source code for the modified version is available on [Sourceforge](https://sourceforge.net/u/agkortzis/formscanner/ci/1.1/tree/). 
 - [ImageMagick](https://www.imagemagick.org/script/index.php) is a free open source application that can create, edit, compose, or convert bitmap images. For Debian/Ubuntu distributions install with ```sudo apt install imagemagick``` command.
 - [Python 3](https://www.python.org/) (or later)
 - [Java 6](https://www.oracle.com/technetwork/java/javase/downloads/index.html) (or later)
@@ -127,4 +127,4 @@ This script will automatically delete all files that are stored in the ```bin/tm
 ## License
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-This tool uses the FormScanner executables (included in the ```lib``` directory), built from a modified (by adding a basic CLI) version 1.1.2. FormScanner's source code is accessible in [Sourceforge](https://sourceforge.net/projects/formscanner/) and licensed under a GPL v3 license.  
+This tool uses the FormScanner executables which are licensed under a GPL v3 license.  
