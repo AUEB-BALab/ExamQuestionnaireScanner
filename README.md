@@ -132,6 +132,8 @@ This script will automatically delete all files that are stored in the ```bin/tm
 - If there are many missed responses in the scanned exams you may need to re-adjust the density and the threshold of the FormScanner template. You can do this directly in the XTMPL file.
 - White spaces in the input filenames (PDFs, FormScanner template, etc.) should be avoided because they cause unexpected behavior of the tool.
 
+## See also
+- [AMC](https://www.auto-multiple-choice.net/index.en)
 
 ## License
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
