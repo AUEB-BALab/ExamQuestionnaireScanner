@@ -95,7 +95,10 @@ optional arguments:
                         The parsed CSV file. The default will be used if not
                         set by the user.
 ```
-
+#### Example
+```
+python examQuestionnaireScanner.py ../pdf ../data/programming-II-formscanner-template.xtmpl '../ΒΑΘΜΟΛΟΓΙΟ ΠΡΟΓΡΑΜΜΑΤΙΣΜΟΣ ΙΙ (8119) 2023-2024 Εξετ. Σεπτ.csv'
+```
 
 ### 5. Manually resolve errors
 The successful completion of the parsing process (```examQuestionnaireScanner.py```) outputs results similar to the following screenshot.
