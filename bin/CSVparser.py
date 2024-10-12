@@ -188,7 +188,7 @@ def parse_FormScanner_csv(input_csv, students_info, output_file):
     titleLabel = ["A.M.", "Exam ID", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Student Name", "Comments"]
     records = read_formScanner_output_csv(input_csv)
 
-    # The first record is the title of each filed, therefore, we have to remove it.
+    # The first record is the title of each field, therefore, we have to remove it.
     records.pop(0)
 
     processed_data = analyze_results(records, titleLabel, students_info)
