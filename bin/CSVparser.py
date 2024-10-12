@@ -5,7 +5,7 @@ import os
 import sys
 
 # Function to check the parity bit and log if there is any issue
-def checkParityBit(bitString, paperID):
+def checkParityBit(bitString):
 
     # In this function we break our string and we check
     # if the first string's character is 1 then an even number of 1s should be there
@@ -117,38 +117,39 @@ def analyze_results(records, titleLabel, students_info):
 
     # We create a new array where we add the new elements sorted and we also merge the student ID and the paper's ID
     # Elements 0 => String of 7 numbers(Student ID), 1 => String of papers ID, and 2-12 => Student's answers for
-    # all the founded number of records, 14 student name, and 15 for logging comment, error, etc.
+    # all found number of records, 14 student name, and 15 for logging comment, error, etc.
     total_number_of_fields = 14
     newSortedArray = [[0 for x in range(total_number_of_fields)] for y in range(number_of_students)]
     paperFormScannerID = ''
 
+    successful_scans = 0
     for x in range(number_of_students):
 
-        # Get the paper ID given from the FormScanner that is stored  in the first place of the second dimention
+        # Get the paper ID given from the FormScanner that is stored  in the first place of the second dimension
         paperFormScannerID = Matrix[x][0]
 
-        # Here we retrieve the students ID from characters and we interpret it in decimals
+        # Retrieve the students ID from characters and interpret it in decimals
         mergeIDElements = ''
         for y in range(12, 19):
             if Matrix[x][y] != '':
                     mergeIDElements += str(ord(Matrix[x][y]) - 65)
 
-        # Now we are going to pipe the retrieved student ID to get its name
+        # Obtain student name from student ID
         newSortedArray[x][total_number_of_fields - 1] = paperFormScannerID
-        studentName = get_studentName_by_ID(mergeIDElements, students_info)
         comment_message = ''
+        if len(mergeIDElements) != 7:
+            comment_message = f"[INVALID STUDENT ID LENGHT] {mergeIDElements} "
+        else:
+            studentName = get_studentName_by_ID(mergeIDElements, students_info)
+            # If the student is not found through an error and log it
+            if not studentName:
+                comment_message = f"[STUDENT ID NOT FOUND] {mergeIDElements} "
 
-        # If the student is not found through an error and log it
-        if str(studentName).__eq__(""):
-            comment_message = "[NOT FOUND] {} was not found in the student_info. File:{}".format(mergeIDElements, paperFormScannerID)
-            logging.warning(comment_message)
-            f = open("logs/error_logs", "a+")
-            f.write("{}\n".format(comment_message))
-            f.close()
+        if comment_message:
             newSortedArray[x][total_number_of_fields - 1] = comment_message
             studentName = "UNKNOWN"
 
-        # Now are going to build a binary number from the Pape's ID
+        # Build a binary number from the Pape's ID
         newSortedArray[x][1] = str(Matrix[x][1]).replace('|','')
         toBinary = ''
         paperIDlist = list(newSortedArray[x][1])
@@ -160,21 +161,32 @@ def analyze_results(records, titleLabel, students_info):
             else:
                 toBinary += "0"
 
-        # Call function to check if there is mistake from the scanned documents
-        if checkParityBit(toBinary, paperFormScannerID):
-            # If there is no mistake convert the binary to Integer
-            newSortedArray[x][1] = int(toBinary[1:], 2)
+        # Check if there is mistake from the scanned documents
+        comment2 = ''
+        documentId = int(toBinary[1:], 2)
+        if documentId < 100:
+            comment2 = f"[INVALID DOCUMENT ID VALUE] {documentId} "
+        elif not checkParityBit(toBinary):
+            comment2 = f"[INVALID DOCUMENT ID PARITY] {documentId} "
         else:
-            comment_message += "[PARITY BIT] check error for {}".format(paperFormScannerID)
-            logging.warning(comment_message)
+            newSortedArray[x][1] = documentId
+
+        if comment2:
+            comment_message += comment2
             newSortedArray[x][total_number_of_fields - 1] = comment_message
 
         get_duplicate = find_duplicate_ID(newSortedArray, mergeIDElements)
         if get_duplicate.__ne__(''):
             comment_message += "[DUPLICATED] {} A.M. with {}".format(paperFormScannerID, get_duplicate)
-            logging.warning(comment_message)
             newSortedArray[x][total_number_of_fields - 1] = comment_message
 
+        if comment_message:
+            logging.warning(comment_message)
+            f = open("logs/error_logs", "a+")
+            f.write("{}\n".format(comment_message))
+            f.close()
+        else:
+            successful_scans += 1
 
         # We add the student ID last to have a valid check with find_duplicate method
         newSortedArray[x][0] = mergeIDElements
@@ -184,6 +196,7 @@ def analyze_results(records, titleLabel, students_info):
         for j in range(2,12):
             newSortedArray[x][j] = Matrix[x][j]
 
+    logging.info(f"Converted {successful_scans} out of {number_of_students} documents")
     return newSortedArray
 
 
