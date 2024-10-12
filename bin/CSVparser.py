@@ -33,7 +33,10 @@ def get_studentName_by_ID(studentID, students_info):
         read_from_csv = csv.reader(csvfile, delimiter=',')
         for row in read_from_csv:
             if studentID in row:
-                return str(row).split(',').__getitem__(1).replace("'","")
+                return (str(row)
+                        .split(',')[1]
+                        .replace("'","")
+                        .replace("]",""))
     # If not found there return an empty string
     return ""
 
