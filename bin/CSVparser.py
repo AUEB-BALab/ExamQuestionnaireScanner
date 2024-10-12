@@ -40,7 +40,7 @@ def get_studentName_by_ID(studentID, students_info):
 
 # Method to compose the results file
 def produceResultsFile(output_csvfile_path, titleLabel, arrayBeforeCSV):
-    with open(output_csvfile_path, "w+", encoding='utf8') as output_csvfile:
+    with open(output_csvfile_path, "w+", encoding='utf-8-sig') as output_csvfile:
         csvWriter = csv.writer(output_csvfile, delimiter=',')
         csvWriter.writerows([titleLabel] + arrayBeforeCSV)
 
