@@ -47,9 +47,16 @@ Retrieve the scanned files (with a USB or via email) and place them in a directo
 
 
 ### 2. Generate a FormScanner template
-A FormScanner template defines the scanning area of a questionnaire form, the number, the position  and the types of the questions. When a new examination form is created the corresponding FormScanner template should be generated as well. The FormScanner website offers a series of [video tutorials](http://www.formscanner.org/video-tutorials) on how to generate examination forms and their corresponding templates.
+A FormScanner template defines the scanning area of a questionnaire form, the number, the position  and the types of the questions.
+When a new examination form is created the corresponding FormScanner template should be generated as well.
+A new template may also be required when scanning with a different scanner
+or settings.
+This is seen when too many forms are incorrectly scanned.
+FormScanner can be run from the `bin` directory with the command
+`java -jar lib/formscanner-main-1.1.2.jar`.
+On YouTube you can find a [video tutorial](https://www.youtube.com/watch?v=I1H8Wj6Tfp4) on how to generate examination forms and their corresponding templates.
 
-**Important**: For the needs of Programming II examination, we use the ```programming-II-formscanner-template.xtmpl``` file, located at the ```data``` directory of the repository.
+**Important**: For the needs of Programming II examination, we use the ```programming-II-formscanner-template-*.xtmpl``` files, located at the ```data``` directory of the repository.
 
 
 ### 3. Prepare the students_info input file
