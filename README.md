@@ -72,7 +72,7 @@ Any headers and/or trailing fields are omitted. An example of such a CSV file is
 
 
 ### 4. Run the tool
-To run the tool go into the ```bin``` directory and execute the ```examQuestionnaireScanner.py``` script. A detailed usage help is presented below.
+To run the tool go into the ```bin``` directory and execute the `cleaner.py` and the `examQuestionnaireScanner.py` scripts. A detailed usage help is presented below.
 ```
 usage: python examQuestionnaireScanner.py [-h] [-f OUTPUT_FORM_SCANNER_CSV] [-s]
                                           [-j FORM_SCANNER_PATH]
@@ -104,7 +104,8 @@ optional arguments:
 ```
 #### Example
 ```
-python examQuestionnaireScanner.py ../pdf ../data/programming-II-formscanner-template.xtmpl '../ΒΑΘΜΟΛΟΓΙΟ ΠΡΟΓΡΑΜΜΑΤΙΣΜΟΣ ΙΙ (8119) 2023-2024 Εξετ. Σεπτ.csv'
+python cleaner.py
+python examQuestionnaireScanner.py ../pdf ../data/programming-II-formscanner-template-2024-09.xtmpl '../ΒΑΘΜΟΛΟΓΙΟ ΠΡΟΓΡΑΜΜΑΤΙΣΜΟΣ ΙΙ (8119) 2023-2024 Εξετ. Σεπτ.csv'
 ```
 
 ### 5. Manually resolve errors
