@@ -38,7 +38,7 @@ The first step of the grading process is the exam papers' scanning. Please note 
 
 - Scanning the Programming II exams is performed on any professional printing/scanning device in the Printing Office at the ground floor of the AUEB main building. We prefer these devices for their capability to scan large batches of documents very fast with the use of the multiple-document feed tray (less than a minute for 150 exams). The scanning process is performed by the personnel of the Printing Office. Please contact [Areti Tsialiou](https://www.aueb.gr/el/faculty_page/tsialioy-areti) ot [Kostas Armyras](https://www.aueb.gr/el/faculty_page/%CE%B1%CF%81%CE%BC%CF%8D%CF%81%CE%B1%CF%82-%CE%BA%CF%8E%CF%83%CF%84%CE%B1%CF%82) before visiting the office and mention that you need to scan a batch of exams for the needs of Programming II course.
 Alternatively you can scan the exams in any personal scanner but it requires manual labor and significantly more time.
-- You should scan only the back side of the exam sheet that contains the responses.
+- You should use only the back side of the exam sheet that contains the responses. To extract the even pages use a command like:  `pdftk both.pdf cat even output even_pages.pdf`.
 - The device's scanning resolution should be set to 300dpi, color or gray-scale.
 - The files generated from the scan process can be PDF files.
 - The exams can be scanned in a single document (preferred option) or many smaller documents.
